@@ -23,4 +23,17 @@ This should hopefully be everything you need to set up a project with our git re
 
 
 Now you should be all set, and you have the project linked to the remote repository. The rest of this doc will
-discuss how to download (pull) and upload(commit) the changes made by me or you.
+discuss how to download (pull) and upload(push) the changes made by me or you.
+
+    - You should see two Icons in the top right of your window next to the Git: label.
+    - The Blue arrow down is update
+    - The green check mark is your commit
+
+1) Committing the changes you have made to the remote repository.
+
+    - When you are satisfied with the changes you have made, press the green check mark to commit
+    - NOTE: This will only commit the changes to your LOCAL MACHINE, we need to do one more step to commit them to
+        the remote repository
+    - Now from the top menu bar, select VCS -> Git -> Push
+    - Select the commit(s) that you just made and push them to the repository
+    - Check the commit log on the website to make sure your changes went through
