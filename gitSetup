@@ -37,3 +37,7 @@ discuss how to download (pull) and upload(push) the changes made by me or you.
     - Now from the top menu bar, select VCS -> Git -> Push
     - Select the commit(s) that you just made and push them to the repository
     - Check the commit log on the website to make sure your changes went through
+
+2) Pulling the changes in the remote repository to your local code
+    - Luckily this is much easier. Simply click on the blue arrow in the top right and merge with your current project.
+
