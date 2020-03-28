@@ -1,0 +1,26 @@
+This should hopefully be everything you need to set up a project with our git repository
+
+1) Import the existing repository
+    From the top bar menu, choose VCS -> Get from Version Control, or, if no project is currently opened,
+    click Get from Version Control on the Welcome screen.
+
+    In the Get from Version Control dialog, specify the URL of the remote repository you want to clone.
+    Our link is: https://github.com/Jamsheedy/Mancala
+
+    Click Clone. When asked to create an IntelliJ project, select Yes and click through all
+    the default settings for the project set up. At this point, you should have all the existing source
+    code in your repository.
+
+2) Sign into Git
+    From the top menu bar select File -> Settings -> Version Control -> GitHub
+    - Select the + in the top right to add your account.
+
+3) Connect your local files to the repository
+    From the top menu bar select VCS -> Git -> Remotes
+    Add the project in as a link
+        - I know this seems dumb because we already used the link to clone the project, but this is the order
+        that I figured it out in
+
+
+Now you should be all set, and you have the project linked to the remote repository. The rest of this doc will
+discuss how to download (pull) and upload(commit) the changes made by me or you.
