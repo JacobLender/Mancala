@@ -1,0 +1,43 @@
+This should hopefully be everything you need to set up a project with our git repository
+
+1) Import the existing repository
+    From the top bar menu, choose VCS -> Get from Version Control, or, if no project is currently opened,
+    click Get from Version Control on the Welcome screen.
+
+    In the Get from Version Control dialog, specify the URL of the remote repository you want to clone.
+    Our link is: https://github.com/Jamsheedy/Mancala
+
+    Click Clone. When asked to create an IntelliJ project, select Yes and click through all
+    the default settings for the project set up. At this point, you should have all the existing source
+    code in your repository.
+
+2) Sign into Git
+    From the top menu bar select File -> Settings -> Version Control -> GitHub
+    - Select the + in the top right to add your account.
+
+3) Connect your local files to the repository
+    From the top menu bar select VCS -> Git -> Remotes
+    Add the project in as a link
+        - I know this seems dumb because we already used the link to clone the project, but this is the order
+        that I figured it out in
+
+
+Now you should be all set, and you have the project linked to the remote repository. The rest of this doc will
+discuss how to download (pull) and upload(push) the changes made by me or you.
+
+    - You should see two Icons in the top right of your window next to the Git: label.
+    - The Blue arrow down is update
+    - The green check mark is your commit
+
+1) Committing the changes you have made to the remote repository.
+
+    - When you are satisfied with the changes you have made, press the green check mark to commit
+    - NOTE: This will only commit the changes to your LOCAL MACHINE, we need to do one more step to commit them to
+        the remote repository
+    - Now from the top menu bar, select VCS -> Git -> Push
+    - Select the commit(s) that you just made and push them to the repository
+    - Check the commit log on the website to make sure your changes went through
+
+2) Pulling the changes in the remote repository to your local code
+    - Luckily this is much easier. Simply click on the blue arrow in the top right and merge with your current project.
+
