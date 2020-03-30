@@ -49,17 +49,20 @@ public class Board
     // negative peices handled in Hollow constructor
   }
 
-  public boolean isEmpty()
-  {
-    /*
-    This will be an indicator for when the game ends
-    Technically a game board is empty even if the end hollows have pieces
-    */
-    for ( Hollow h : hollows )
-    {
-      if ( !h.empty() ) return false;
+  public boolean emptySide(){ // this will indicate if a playing side of the board is empty
+    boolean empty = true;
+    for(int i = 0; i < hollows.length/2; i++){
+      if ( !hollows[i].empty()) empty = false;
     }
-    return true;
+    if (empty)
+      return empty;
+
+    empty = true;
+    for( int i = hollows.length/2; i < hollows.length; i++){
+      if ( !hollows[i].empty())
+        empty = false;
+    }
+    return empty;
   }
 }
 
