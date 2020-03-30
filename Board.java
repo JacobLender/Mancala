@@ -1,33 +1,13 @@
-public class Board
+import javax.swing.*;
+import java.awt.*;
+
+public class Board extends JPanel
 {
   private Hollow [] hollows;
-  /*
-  This could be one of the advanced functionality, where the user can choose
-  how many spots are on the board... may have to limit this for graphics
-  purposes.
-
-  For now, lets not worry too much about this. We will use the standard
-  size (12).
-
-  */
-
-  // hollows at each end
   private Hollow bottom = new Hollow();
   private Hollow top = new Hollow();
 
-  /* we are going to need a standard way to label the board
-  Here is what I am thinking:
-
-      top
-     (6) (5)
-     (7) (4)
-     (8) (3)
-     (9) (2)
-     (10) (1)
-     (11) (0)
-     bottom
-
-  */
+  // constructors
 
   public Board()
   {
@@ -63,6 +43,52 @@ public class Board
         empty = false;
     }
     return empty;
+  }
+
+  // begin graphics
+
+  public void paintComponent(Graphics g){
+    super.paintComponent(g);
+    setBackground(Color.WHITE);
+
+    int boardLength = getWidth()/2;
+    int boardHeight = getHeight()*3/4;
+    int boardX = getWidth()/4;
+    int boardY = getHeight()/10;
+
+    g.setColor(new Color(205, 170, 125));
+    g.fillRoundRect(boardX, boardY, boardLength, boardHeight, getWidth()/10, getHeight()/10);
+
+    g.setColor(new Color(152, 117, 84));
+    int topBasketX = getWidth()/4 + boardLength/20;
+    int topBasketY = getHeight()/10 + boardHeight/45;
+    int bottomBasketX = getWidth()/4 + boardLength/20;
+    int bottomBasketY = getHeight()*15/20 - boardHeight/45;
+
+    g.fillRoundRect(topBasketX, topBasketY, boardLength - getWidth()/20, boardHeight/8, getWidth()/20, getHeight()/20);
+    g.fillRoundRect(bottomBasketX, bottomBasketY, boardLength - getWidth()/20, boardHeight/8, getWidth()/20, getHeight()/20);
+
+    int circleLength = boardLength / 4;
+    int circleHeight = boardHeight / 9;
+
+    int incrementLeft = topBasketY + boardHeight/8;
+    for(int i = 0; i < 6; i++) {
+      g.setColor(new Color(152, 117, 84));
+      g.fillOval(topBasketX + topBasketX /4, incrementLeft, circleLength, circleHeight);
+      g.setColor(new Color(0, 0, 0));
+      g.drawString(  hollows[i].getCount()+ "",topBasketX + topBasketX /4 + circleLength/2, incrementLeft + circleHeight/2);
+      incrementLeft = incrementLeft + circleHeight;
+    }
+
+    int incrementRight = topBasketY + boardHeight/8;
+    for(int i = 6; i < 12; i++){
+      g.setColor(new Color(152, 117, 84));
+      g.fillOval(bottomBasketX + topBasketX, incrementRight, circleLength, circleHeight);
+      g.setColor(new Color(0, 0, 0));
+      g.drawString( hollows[i].getCount()+"", bottomBasketX + topBasketX + circleLength/2, incrementRight + circleHeight/2);
+      incrementRight = incrementRight + circleHeight;
+    }
+
   }
 }
 
