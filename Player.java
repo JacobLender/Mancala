@@ -8,7 +8,7 @@ public abstract class Player {
         pieces = 0;
         side = s;
     }
-    public abstract void takeTurn();
+    public abstract void takeTurn(Board board);
 
     //accessors
     public int getPieces()
@@ -19,7 +19,7 @@ class HumanPlayer extends Player{
     public HumanPlayer(String s){
         super(s);
     }
-    public void takeTurn(){
+    public void takeTurn(Board board){
 
     }
 }
