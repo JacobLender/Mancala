@@ -12,10 +12,10 @@ public abstract class Game {
     // add other objects such as players
 
     public Game(){
-        gameBoard = new Board(6, 1) {
+        gameBoard = new Board(6, 6) {
         };
-        list[0] = new HumanPlayer(-1);
-        list[1] = new HumanPlayer(1);
+        list[0] = new HumanPlayer(-1);  // home is bottom hollow (hollow they want to score on)
+        list[1] = new HumanPlayer(1);   // home is top hollow
 
         JFrame frame = new JFrame("Mancala");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

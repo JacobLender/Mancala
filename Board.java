@@ -136,8 +136,6 @@ public class Board extends JPanel
       i = i % hollows.length;
 
     int distance = i - sideLength - 1;
-    System.out.println(i + " - " + sideLength + " - 1 = " + distance);
-    System.out.println( sideLength + "+ 1 - "+ distance +" = " + (sideLength+1-distance));
     return hollows[(sideLength + 1 - distance)];
   }
 
