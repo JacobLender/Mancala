@@ -6,38 +6,36 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.lang.module.ModuleDescriptor;
 
 
 public class menu extends JFrame{
-    //    private JLabel label1;
-    private JButton start;
-    private JButton Rules;
-    private JButton Options;
-    private JButton Stats;
+    private JFrame frame;
+    //private JButton start;
+    //private JButton Rules;
+    //private JButton Options;
+   // private JButton Stats;
     private String gameMode;
     private String playerOption;
     private static int playCount;
     private static int gamesWon;
     private static double winPercentage;
     private int colorChooser;
-    private final Color colorNames[] = { Color.BLACK, Color.BLUE, Color.CYAN,
+    private Color colorNames[] = { Color.BLACK, Color.BLUE, Color.CYAN,
             Color.GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE,
             Color.PINK, Color.RED, Color.YELLOW };
+    ButtonGroup gamemodeGroup;
+    ButtonGroup playerGroup;
 
     public menu() {
-        super();
-        this.setSize(100, 100);
-        this.setVisible(true);
-
         createAndShowGUI("Menu");
-        //createAndShowGUI("Setup");
 
         //createAndShowGUI("Rules");
     }
 
     public static void main(String[] args) {
         menu men = new menu();
-        men.setVisible(true);
+
 //        createAndShowGUIMenu();
 //        createAndShowGUISetup();
 //        createAndShowGUIStats();
@@ -94,26 +92,37 @@ public class menu extends JFrame{
     public void Setup(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         CheckBoxHandler Players = new CheckBoxHandler();
+        playerGroup = new ButtonGroup();
 
         addlabel("Choose Players", pane, 50, Color.BLACK);
         JRadioButton PVP = new JRadioButton("Player vs Player");
         addRadioButton(PVP, pane);
         PVP.addActionListener(Players);
+        playerGroup.add(PVP);
+
         JRadioButton PVC = new JRadioButton("Player vs Computer");
         addRadioButton(PVC, pane);
         PVC.addActionListener(Players);
+        playerGroup.add(PVC);
+
         JRadioButton CVC = new JRadioButton("Computer vs Computer");
         addRadioButton(CVC, pane);
         CVC.addActionListener(Players);
+        playerGroup.add(CVC);
 
         CheckBoxHandler gameMode = new CheckBoxHandler();
         addlabel("Game Mode", pane, 50, Color.BLACK);
+        gamemodeGroup = new ButtonGroup();
+
         JRadioButton capture = new JRadioButton("Capture");
         addRadioButton(capture, pane);
         capture.addActionListener(gameMode);
+        gamemodeGroup.add(capture);
+
         JRadioButton avalanche = new JRadioButton("Avalanche");
         addRadioButton(avalanche, pane);
         capture.addActionListener(gameMode);
+        gamemodeGroup.add(avalanche);
 
         ButtonHandler buttonHandle = new ButtonHandler();
         JButton startGame = new JButton("Start Game");
@@ -132,59 +141,100 @@ public class menu extends JFrame{
 
     }
 
-    public static void Rules(Container pane) {
-        String label = ("<html><span>1. Each Player has a store on one side of the board.<br><br>" +
-                "2.Players take turns choosing a pile from one of the holes. Moving<br>" +
-                "counter-clockwise, stones from the selected pile are deposited in each<br>" +
-                "of the following hole until you run out of stones.<br><br>" +
-                "3. If you drop the last stone into your store - you get a free turn.<br><br>" +
-                "4. If you drop the last stone into an empty hole on your side of the board" +
-                "- you can capture stones from the hole on the opposite side.<br><br>" +
-                "5. The game ends when all six holes on either side of the board are empty." +
-                "If a player has any stones on their side of the board when the game ends -" +
-                "he will capture all of those stones.<br><br><br>" +
-                "GOAL: PLAYER WITH THE MOST STONES IN THEIR STORE WINS<br></span></html>");
+    public void captureRules(Container pane) {
+
+            String str = ("<html><span>1. Each Player has a store on one side of the board.<br><br>" +
+                    "2.Players take turns choosing a pile from one of the holes. Moving<br>" +
+                    "counter-clockwise, stones from the selected pile are deposited in each<br>" +
+                    "of the following hole until you run out of stones.<br><br>" +
+                    "3. If you drop the last stone into your store - you get a free turn.<br><br>" +
+                    "4. If you drop the last stone into an empty hole on your side of the board" +
+                    "- you can capture stones from the hole on the opposite side.<br><br>" +
+                    "5. The game ends when all six holes on either side of the board are empty." +
+                    "If a player has any stones on their side of the board when the game ends -" +
+                    "he will capture all of those stones.<br><br><br>" +
+                    "GOAL: PLAYER WITH THE MOST STONES IN THEIR STORE WINS<br></span></html>");
+
+
 
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         addlabel("Rules of the Game", pane, 50, Color.RED);
-        addlabel(label, pane, 15, Color.BLACK);
+        addlabel(str, pane, 15, Color.BLACK);
+
+        ButtonHandler buttonHandle = new ButtonHandler();
+        JButton Begin = new JButton("Begin!");
+        addAButton(Begin, pane);
+        Begin.addActionListener(buttonHandle);
+
+    }
+
+    public void avalancheRules(Container pane) {
+
+        String str = ("<html><span>Rules:<br> 1. Each Player has a store on one side of the board.<br><br>" +
+                "2. Players take turns choosing a pile from one of the holes. Moving counter-clockwise, stones from " +
+                "the selected pile are deposited in each of the following hole.<br><br>" +
+                "3. If you drop the last stone into an unempty hole, you will pick up the stones from that hole and " +
+                "continue depositing them counter-clockwise.<br><br>" +
+                "4. Your turn is over when you drop the last stone into an empty hole. <br><br>" +
+                "5. If you drop the last stone into your store - you get a free turn.<br><br>" +
+                "6. The game ends when all six holes on either side of the board are empty.<br><br>" +
+                "Goal: Player with most stones in their stones wins.</span></html>");
+
+
+
+        pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+        addlabel("Rules of the Game", pane, 50, Color.RED);
+        addlabel(str, pane, 15, Color.BLACK);
+
+        ButtonHandler buttonHandle = new ButtonHandler();
+        JButton Begin = new JButton("Begin!");
+        addAButton(Begin, pane);
+        Begin.addActionListener(buttonHandle);
 
     }
 
     private void createAndShowGUI(String frameName) {
-        JFrame frame = new JFrame(frameName);
+        frame = new JFrame(frameName);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        if (frameName == "Menu") {
+        if (frameName.equals("Menu"))
             Menu(frame.getContentPane());
-        } else if (frameName == "Setup")
+        else if (frameName.equals("Setup"))
             Setup(frame.getContentPane());
-        else if (frameName == "Statistics") {
+        else if (frameName.equals("Statistics"))
             Statistics(frame.getContentPane());
-        } else {
-            Rules(frame.getContentPane());
-        }
+        else if(frameName.equals("captureRules"))
+            captureRules(frame.getContentPane());
+        else if(frameName.equals("avalancheRules"))
+            avalancheRules(frame.getContentPane());
+
 
         frame.pack();
         frame.setSize(600, 600);
         frame.setVisible(true);
     }
 
-    private class CheckBoxHandler  implements ActionListener{    // respond to checkbox events
+    private class CheckBoxHandler implements ActionListener{    // respond to checkbox events
         public void actionPerformed(ActionEvent event) {
+            String str = event.getActionCommand();
             // process bold checkbox events
-            if (event.getSource().toString() == "PVP") {
+            if (str.equals("Player vs Player")) {
                 playerOption = "PVP";
-            } else if (event.getSource().toString() == "PVC") {
+
+            } else if (str.equals("Player vs Computer")) {
                 playerOption = "PVC";
-            } else if (event.getSource().toString() == "CVC") {
+
+            } else if (str.equals("Computer vs Computer")) {
                 playerOption = "CVC";
+
             }
 
-            if (event.getSource() == "capture") {
+            if (str.equals("capture")) {
                 gameMode = "capture";
-            } else if (event.getSource() == "avalanche") {
+
+            } else if (str.equals("avalanche")) {
                 gameMode = "avalanche";
+
             }
 
         } // end method itemStateChanged
@@ -193,15 +243,32 @@ public class menu extends JFrame{
 
     private class ButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            if (event.equals("playGame")) {
+
+            String str = event.getActionCommand();
+            if (str.equals("Play Game")) {
+                frame.setVisible(false);
                 createAndShowGUI("Setup");
-            } else if (event.getSource().toString().equals("stats")) {
+            } else if (str.equals("Statistics")) {
+                frame.setVisible(false);
                 createAndShowGUI("Statistics");
-            } else if (event.getSource().toString().equals("DoNotPress")) {
+            } else if (str.equals("DO NOT PRESS!")) {
+                frame.setVisible(false);
                 if (colorChooser == 9)
                     colorChooser = 0;
                 else
                     colorChooser++;
+
+                createAndShowGUI("Menu");
+            }else if(str.equals("Start Game")){
+                frame.setVisible(false);
+                if(gameMode.equals("capture"))
+                    createAndShowGUI("captureRules");
+                else
+                    createAndShowGUI("avalancheRules");
+
+            }else if(str.equals("Begin!")){
+                frame.setVisible(false);
+                createAndShowGUI("GAME"); //This is where the game will begin. We will need input
             }
         } // end method itemStateChanged
 
