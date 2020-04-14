@@ -229,11 +229,11 @@ public class menu extends JFrame{
 
             }
 
-            if (str.equals("capture")) {
-                gameMode = "capture";
+            if (str.equals("Capture")) {
+                gameMode = "Capture";
 
-            } else if (str.equals("avalanche")) {
-                gameMode = "avalanche";
+            } else if (str.equals("Avalanche")) {
+                gameMode = "Avalanche";
 
             }
 
@@ -261,10 +261,13 @@ public class menu extends JFrame{
                 createAndShowGUI("Menu");
             }else if(str.equals("Start Game")){
                 frame.setVisible(false);
-                if(gameMode.equals("capture"))
+
+                if(gameMode.equals("Capture")) {
                     createAndShowGUI("captureRules");
-                else
+                }else if(gameMode.equals("Avalanche")){
                     createAndShowGUI("avalancheRules");
+
+                }
 
             }else if(str.equals("Begin!")){
                 frame.setVisible(false);
