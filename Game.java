@@ -9,12 +9,12 @@ public class Game extends JPanel{
     private JTextPane statusbar;
     private Player [] list = new Player[2];
 
-    public static int CAPTURE_MODE = 0;
-    public static int AVALANCHE_MODE = 1;
+    public final static int CAPTURE_MODE = 0;
+    public final static int AVALANCHE_MODE = 1;
 
-    public static int HUMAN_PLAYER = 0;
-    public static int EASY_COMPUTER = 1;
-    public static int MEDIUM_COMPUTER = 2;
+    public final static int HUMAN_PLAYER = 0;
+    public final static int EASY_COMPUTER = 1;
+    public final static int MEDIUM_COMPUTER = 2;
 
     public Game(){
         this(CAPTURE_MODE, HUMAN_PLAYER, HUMAN_PLAYER);
