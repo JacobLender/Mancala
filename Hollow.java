@@ -37,6 +37,7 @@ class Hollow extends JButton implements ActionListener
     public boolean isClicked(){
         return isClicked;
     }
+    public void click(){ isClicked = true;}
     public void unClick(){
         isClicked = false;
     }
@@ -46,12 +47,10 @@ class Hollow extends JButton implements ActionListener
     {
         add(1);
     }
-
     public void add(int i)
     {
         count += i;
     }
-
     public int take()
     // simulates a player taking peices from a hollow
     {
