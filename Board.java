@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Board extends JPanel
+public abstract class Board extends JPanel
 {
-  private Hollow [] hollows;
-  private int sideLength;
+  protected Hollow [] hollows;
+  protected int sideLength;
 
   // constructors
 
@@ -42,7 +42,6 @@ public class Board extends JPanel
       hollows[i].setBorderPainted(false);
     }
     // negative peices handled in Hollow constructor
-
   }
 
   public int buttonClicked(){
@@ -97,15 +96,15 @@ public class Board extends JPanel
     }
     hollows[0].add(x);
   }
+  public abstract boolean movePieces(Player p, int spot);
+
   public boolean emptySide(){ // this will indicate if a playing side of the board is empty
     boolean empty = true;
 
     for(int i = 1; i < hollowsLength(); i++){
       if (i == sideLength + 1){
-        if ( empty ){
-          System.out.println("Right side is empty!");
+        if ( empty )
           return true;
-        }
         empty = true;
       }
       else
@@ -119,9 +118,16 @@ public class Board extends JPanel
   public int hollowsLength(){
     return hollows.length;
   }
+  public int numPieces(){
+    int count =0;
+    for ( Hollow h : hollows)
+      count += h.getCount();
+
+    return count;
+  }
   public Hollow getHollow(int i)
   {
-    return hollows[i];
+    return hollows[i % hollows.length];
   }
   public Hollow getHome(Player p){
     if (p.getHome() == -1 )
@@ -154,6 +160,19 @@ public class Board extends JPanel
     return hollows[0].getCount() - hollows[sideLength+1].getCount();
   }
 
+  public int canPlayHome(Player p){
+    // will play home with closes peices
+    int start = hollows.length;
+    if( p.getHome() == 1)
+      start = start - sideLength - 1;
+
+    for( int i = start - 1; i > start - sideLength - 1; i--){
+      if( i + getHollow(i).getCount() == start)
+        return i;
+    }
+    return -1;
+  }
+
   // begin graphics
 
   public void paintComponent(Graphics g){
@@ -164,6 +183,8 @@ public class Board extends JPanel
     int boardHeight = getHeight()*3/4;
     int boardX = getWidth()/4;
     int boardY = getHeight()/10;
+
+    g.drawString(numPieces()+"", 50, 50);
 
     g.setColor(new Color(205, 170, 125));
     g.fillRoundRect(boardX, boardY, boardLength, boardHeight, getWidth()/10, getHeight()/10);
@@ -192,6 +213,11 @@ public class Board extends JPanel
         g.fillOval(topBasketX + topBasketX/4 - circleLength /30, incrementY - circleHeight/30,
                 circleLength + circleLength /15, circleHeight + circleHeight /15);
       }
+      if(hollows[i].isClicked()){
+        g.setColor(new Color(54, 194, 70));
+        g.fillOval(topBasketX + topBasketX/4 - circleLength /30, incrementY - circleHeight/30,
+                circleLength + circleLength /15, circleHeight + circleHeight /15);
+      }
 
       //draw hollow
       g.setColor(new Color(152, 117, 84));
@@ -209,6 +235,11 @@ public class Board extends JPanel
       // draw highlight is possible
       if(hollows[i].isEnabled() && hollows[i].getCount() != 0) {
         g.setColor(new Color(194, 192, 15));
+        g.fillOval(bottomBasketX + topBasketX - circleLength /30, incrementY - circleHeight/30,
+                circleLength + circleLength /15, circleHeight + circleHeight /15);
+      }
+      if(hollows[i].isClicked()){
+        g.setColor(new Color(54, 194, 70));
         g.fillOval(bottomBasketX + topBasketX - circleLength /30, incrementY - circleHeight/30,
                 circleLength + circleLength /15, circleHeight + circleHeight /15);
       }
