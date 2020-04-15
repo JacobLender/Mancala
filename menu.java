@@ -1,20 +1,11 @@
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JCheckBox;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.lang.module.ModuleDescriptor;
-
+import java.lang.String;
 
 public class menu extends JFrame{
     private JFrame frame;
-    //private JButton start;
-    //private JButton Rules;
-    //private JButton Options;
-   // private JButton Stats;
     private String gameMode;
     private String playerOption;
     private static int playCount;
@@ -26,20 +17,14 @@ public class menu extends JFrame{
             Color.PINK, Color.RED, Color.YELLOW };
     ButtonGroup gamemodeGroup;
     ButtonGroup playerGroup;
+    private String currentFrame;
 
     public menu() {
         createAndShowGUI("Menu");
-
-        //createAndShowGUI("Rules");
     }
 
     public static void main(String[] args) {
         menu men = new menu();
-
-//        createAndShowGUIMenu();
-//        createAndShowGUISetup();
-//        createAndShowGUIStats();
-//        createAndShowGUIRules();
     }
 
     private void addAButton(JButton buttName, Container container) {
@@ -121,23 +106,33 @@ public class menu extends JFrame{
 
         JRadioButton avalanche = new JRadioButton("Avalanche");
         addRadioButton(avalanche, pane);
-        capture.addActionListener(gameMode);
+        avalanche.addActionListener(gameMode);
         gamemodeGroup.add(avalanche);
+
+
 
         ButtonHandler buttonHandle = new ButtonHandler();
         JButton startGame = new JButton("Start Game");
         addAButton(startGame, pane);
         startGame.addActionListener(buttonHandle);
 
+        JButton back = new JButton("Back");
+        addAButton(back, pane);
+        back.addActionListener(buttonHandle);
     }
 
-    public static void Statistics(Container pane) {
+    public void Statistics(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
         addlabel("Statistics", pane, 80, Color.RED);
         addlabelforStats("Games Played: ", playCount, pane, 40, Color.RED);
         addlabelforStats("Games Won: ", gamesWon, pane, 40, Color.ORANGE);
         addlabelforStats("Winning Percentage: ", winPercentage, pane, 40, Color.RED);
+
+        ButtonHandler buttonHandle = new ButtonHandler();
+        JButton back = new JButton("Back");
+        addAButton(back, pane);
+        back.addActionListener(buttonHandle);
 
     }
 
@@ -166,6 +161,10 @@ public class menu extends JFrame{
         addAButton(Begin, pane);
         Begin.addActionListener(buttonHandle);
 
+        JButton back = new JButton("Back");
+        addAButton(back, pane);
+        back.addActionListener(buttonHandle);
+
     }
 
     public void avalancheRules(Container pane) {
@@ -191,6 +190,10 @@ public class menu extends JFrame{
         addAButton(Begin, pane);
         Begin.addActionListener(buttonHandle);
 
+        JButton back = new JButton("Back");
+        addAButton(back, pane);
+        back.addActionListener(buttonHandle);
+
     }
 
     private void createAndShowGUI(String frameName) {
@@ -207,7 +210,6 @@ public class menu extends JFrame{
             captureRules(frame.getContentPane());
         else if(frameName.equals("avalancheRules"))
             avalancheRules(frame.getContentPane());
-
 
         frame.pack();
         frame.setSize(600, 600);
@@ -246,9 +248,11 @@ public class menu extends JFrame{
 
             String str = event.getActionCommand();
             if (str.equals("Play Game")) {
+                currentFrame = "Setup";
                 frame.setVisible(false);
                 createAndShowGUI("Setup");
             } else if (str.equals("Statistics")) {
+                currentFrame = "Statistics";
                 frame.setVisible(false);
                 createAndShowGUI("Statistics");
             } else if (str.equals("DO NOT PRESS!")) {
@@ -263,10 +267,19 @@ public class menu extends JFrame{
                 frame.setVisible(false);
 
                 if(gameMode.equals("Capture")) {
+                    currentFrame = "captureRules";
                     createAndShowGUI("captureRules");
                 }else if(gameMode.equals("Avalanche")){
+                    currentFrame = "avalancheRules";
                     createAndShowGUI("avalancheRules");
-
+                }
+            }else if(str.equals("Back")){
+                frame.setVisible(false);
+                if(currentFrame.equals("Statistics") || currentFrame.equals("Setup")){
+                    createAndShowGUI("Menu");
+                }else if(currentFrame.equals("captureRules") || currentFrame.equals("avalancheRules")){
+                    createAndShowGUI("Setup");
+                    currentFrame = "Setup";
                 }
 
             }else if(str.equals("Begin!")){
@@ -277,77 +290,3 @@ public class menu extends JFrame{
 
     } // end private inner class CheckBoxHandler
 }
-//
-//    public class Butt extends JFrame implements ActionListener{
-//        private Button button1;
-//        public Butt(){
-//            super();
-//            this.setSize(100,100);
-//            this.setVisible(true);
-//
-//            this.button1 = newJButton("1");
-//            this.button1.addActionListener(this);
-//            this.add(button1);
-//        }
-//        public static void main(String[] args){
-//            Butt but = new Butt();
-//            but.setVisible(true);
-//        }
-//        public void actionPerformed(ActionEvent e){
-//            if(e.getSource() == button1){
-//
-//            }else if(e.getSource() == button2){
-//
-//            }else if(e.getSource() == button3){
-//
-//            }
-//        }
-//    }
-
-//    public menu(){
-//        setLayout(new FlowLayout());
-//
-//        label1 = new JLabel("MANCALA");
-//        label1.setFont(new Font("Verdana", Font.BOLD, 90));
-//        label1.setForeground(Color.blue);
-//        add(label1);
-//
-//        start = new JButton("Play Game");
-//        start.setFont(new Font("Verdana", Font.PLAIN, 50));
-//        start.setPreferredSize(new Dimension(400, 75));
-//        add(start);
-//
-//        Rules = new JButton("Rules");
-//        Rules.setFont(new Font("Verdana", Font.PLAIN, 50));
-//        Rules.setPreferredSize(new Dimension(400, 75));
-//        add(Rules);
-//
-//        Options = new JButton("Statistics");
-//        Options.setFont(new Font("Verdana", Font.PLAIN, 50));
-//        Options.setPreferredSize(new Dimension(400, 75));
-//        add(Options);
-//
-//        Stats = new JButton("Settings");
-//        Stats.setFont(new Font("Verdana", Font.PLAIN, 50));
-//        Stats.setPreferredSize(new Dimension(400, 75));
-//        add(Stats);
-//    }
-
-//
-//        public void paintComponent(Graphics2D g) {
-//            super.paintComponent(g);
-//            int startX = getWidth();
-//            int startY = getHeight();
-//
-//
-//            g.setFont(new Font("TimesRoman", Font.BOLD, 100));
-//            g.drawString("MANCALA", startX, startY);
-//            g.setColor(Color.CYAN);
-//            g.fill3DRect(startX / 200, startY / 7, startX, startY, true);
-//            g.setColor(Color.BLACK);
-//
-//
-//        }
-
-
-
