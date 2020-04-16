@@ -11,8 +11,6 @@ public abstract class Player {
         home = h;
     }
 
-    public abstract int takeTurn(Board b);
-    //mutators
     public void setHome(int h){
         home = h;
     }
@@ -25,7 +23,23 @@ public abstract class Player {
     public int oppHome(){
         return home * -1;
     }
+
+    public int canPlayHome(Board b){
+        // will play home with closes peices
+        int start = b.hollowsLength();
+        if( home == 1)
+            start = start - b.getSideLength() - 1;
+
+        for( int i = start - 1; i > start - b.getSideLength() - 1; i--){
+            if( i + b.getHollow(i).getCount() == start)
+                return i;
+        }
+        return -1;
+    }
+
+    public abstract int takeTurn(Board b);
 }
+
 class HumanPlayer extends Player{
     public HumanPlayer(){
         super();
@@ -54,8 +68,8 @@ class EasyComputer extends Player{
     public int takeTurn(Board b){
         int spot;
 
-        if(b.canPlayHome(this) != -1)
-            spot = b.canPlayHome(this);
+        if(canPlayHome(b) != -1)
+            spot = canPlayHome(b);
         else {
             Random rand = new Random();
             do {

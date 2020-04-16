@@ -7,7 +7,6 @@ public abstract class Board extends JPanel
   protected int sideLength;
 
   // constructors
-
   public Board()
   {
     this(6);   // constructor delegation
@@ -20,8 +19,6 @@ public abstract class Board extends JPanel
   {
     if (s < 2)
       sideLength = 2;
-    else if ( s % 2 != 0)
-      sideLength = s - 1;
     else
       sideLength = s;
 
@@ -158,19 +155,6 @@ public abstract class Board extends JPanel
       return hollows[sideLength+1].getCount() - hollows[0].getCount();
 
     return hollows[0].getCount() - hollows[sideLength+1].getCount();
-  }
-
-  public int canPlayHome(Player p){
-    // will play home with closes peices
-    int start = hollows.length;
-    if( p.getHome() == 1)
-      start = start - sideLength - 1;
-
-    for( int i = start - 1; i > start - sideLength - 1; i--){
-      if( i + getHollow(i).getCount() == start)
-        return i;
-    }
-    return -1;
   }
 
   // begin graphics
