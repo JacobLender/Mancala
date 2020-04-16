@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.String;
 
-public class menu extends JFrame{
+public class menu{
     private JFrame frame;
     private String gameMode;
     private String playerOption;
@@ -25,6 +25,8 @@ public class menu extends JFrame{
 
     public static void main(String[] args) {
         menu men = new menu();
+//        Game cap = new CaptureMode();
+//        cap.playGame();
     }
 
     private void addAButton(JButton buttName, Container container) {
@@ -195,6 +197,22 @@ public class menu extends JFrame{
         back.addActionListener(buttonHandle);
 
     }
+    public void startGame(){                    //This code is in Game.java as the main
+        frame = new JFrame("Mancala");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 900);
+        frame.setVisible(true);
+
+        // set up with static constants
+        Game match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
+
+        // add to whatever frame you need it to be
+        frame.add(match);
+
+        // game has started
+        match.playGame();
+
+    }
 
     private void createAndShowGUI(String frameName) {
         frame = new JFrame(frameName);
@@ -210,6 +228,8 @@ public class menu extends JFrame{
             captureRules(frame.getContentPane());
         else if(frameName.equals("avalancheRules"))
             avalancheRules(frame.getContentPane());
+        else if(frameName.equals("GAME"))
+            startGame();
 
         frame.pack();
         frame.setSize(600, 600);
@@ -283,8 +303,10 @@ public class menu extends JFrame{
                 }
 
             }else if(str.equals("Begin!")){
+                System.out.println("START HERE");
                 frame.setVisible(false);
-                createAndShowGUI("GAME"); //This is where the game will begin. We will need input
+                createAndShowGUI("GAME");
+
             }
         } // end method itemStateChanged
 
