@@ -30,8 +30,7 @@ public class menu implements ChangeListener{
 
     public static void main(String[] args) {
         menu men = new menu();
-//        Game cap = new CaptureMode();
-//        cap.playGame();
+
     }
 
     private void addAButton(JButton buttName, Container container) {
@@ -329,7 +328,7 @@ public class menu implements ChangeListener{
                 }
 
             }else if(buttonName.equals("Begin!")){
-                System.out.println("START HERE");
+
                 frame.setVisible(false);
                 createAndShowGUI("GAME");
 
