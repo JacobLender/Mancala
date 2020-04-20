@@ -4,7 +4,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.String;
 
 public class menu implements ChangeListener{
     private JFrame frame;
@@ -14,7 +13,7 @@ public class menu implements ChangeListener{
     private static int gamesWon;
     private static double winPercentage;
     private int colorChooser;
-    private Color colorNames[] = { Color.BLACK, Color.BLUE, Color.CYAN,
+    private Color[] colorNames = { Color.BLACK, Color.BLUE, Color.CYAN,
             Color.GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE,
             Color.PINK, Color.RED, Color.YELLOW };
     ButtonGroup gamemodeGroup;
@@ -235,8 +234,6 @@ public class menu implements ChangeListener{
         frame.add(match);
 
         // game has started
-        match.playGame();
-
     }
 
     private void createAndShowGUI(String frameName) {
@@ -344,9 +341,9 @@ public class menu implements ChangeListener{
             String sliderName = tempSlide.getName();
 
             if(sliderName.equals("HollowSlider"))
-                numofHollow = (int) tempSlide.getValue();
+                numofHollow = tempSlide.getValue();
             else if(sliderName.equals("MarbleSlider"))
-                numofMarbles = (int) tempSlide.getValue();
+                numofMarbles = tempSlide.getValue();
 
         }
 
