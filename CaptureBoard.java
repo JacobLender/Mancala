@@ -15,23 +15,20 @@ public class CaptureBoard extends Board{
 
     public void setUpMover(){
         pieceMover.addActionListener(new ActionListener() {
-            boolean skipMove;
             @Override
             public void actionPerformed(ActionEvent e) {
-                skipMove = false;
                 currentHollow = getHollow(playSpot + 1 + i);        // next spot on board
                 if (currentHollow.getSide() != currentPlayer.oppHome()) {      // increment if not opponent home
                     currentHollow.increment();
                     System.out.println("Increment done");
                     repaint();
                 } else {
-                    skipMove = true;                                          // if opponent home, we need to go additional spot
+                    pieceCount++;                                           // if opponent home, we need to go additional spot
                     System.out.print("Pieces is incremented");
                 }
-
-                if (i < pieceCount - 1 && !skipMove)       // counter boundary
+                if (i < pieceCount - 1)       // counter boundary
                     i++;
-                else if(!skipMove){
+                else {
                     pieceMover.stop();
                     moved = true;
                     System.out.println("Moved set to true...");
