@@ -1,4 +1,8 @@
-public class CaptureBoard extends Board {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+public class CaptureBoard extends Board{
     public CaptureBoard(){
         super();
     }
@@ -9,39 +13,44 @@ public class CaptureBoard extends Board {
         super(sideLength, pieces);
     }
 
-    public boolean movePieces(Player p, int spot){
-        int x = getHollow(spot).take();
-        Hollow h = new Hollow();
-        try{
-            for (int i = 0; i < x; i++) {
-                h = getHollow(spot + 1 + i);
-                if (h.getSide() != p.oppHome()) {
-                    h.increment();
+    public void setUpMover(){
+        pieceMover.addActionListener(new ActionListener() {
+            boolean skipMove;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                skipMove = false;
+                currentHollow = getHollow(playSpot + 1 + i);        // next spot on board
+                if (currentHollow.getSide() != currentPlayer.oppHome()) {      // increment if not opponent home
+                    currentHollow.increment();
+                    System.out.println("Increment done");
                     repaint();
-                    Thread.sleep(650);
+                } else {
+                    skipMove = true;                                          // if opponent home, we need to go additional spot
+                    System.out.print("Pieces is incremented");
                 }
-                else
-                    x++;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if (p.getHome() == h.getSide()){
-            return true;
-        }
-        else if( h.getCount() == 1 && h.getSide() == 0 && playerSide(p, spot+x)){
-            if (oppositeHollow((spot+x)).getCount()!= 0) {
-                // player ends on their side and with opposite hollow has pieces
-                Hollow home = getHome(p);
 
-                int y = h.take();
-                int z = oppositeHollow(spot + x).take();
+                if (i < pieceCount - 1 && !skipMove)       // counter boundary
+                    i++;
+                else if(!skipMove){
+                    pieceMover.stop();
+                    moved = true;
+                    System.out.println("Moved set to true...");
 
-                home.add(y + z);
-                repaint();
-                return true;
+                    if (currentPlayer.getHome() == currentHollow.getSide()) {
+                        System.out.println("User scored!");
+                        retry = true;
+                    } else if (currentHollow.getCount() == 1 && currentHollow.getSide() == 0 && playerSide(currentPlayer, playSpot + pieceCount)
+                            && oppositeHollow((playSpot + pieceCount)).getCount() != 0) {
+
+                        Hollow home = getHome(currentPlayer);
+                        int y = currentHollow.take();
+                        int z = oppositeHollow(playSpot + pieceCount).take();
+                        home.add(y + z);
+                        repaint();
+                        retry = true;
+                    }
+                }
             }
-        }
-        return false;
+        });
     }
 }

@@ -6,6 +6,19 @@ public abstract class Board extends JPanel
   protected Hollow [] hollows;
   protected int sideLength;
 
+  protected Hollow currentHollow;
+  protected int pieceCount;
+  public boolean retry;
+  protected boolean moved = false;
+  protected boolean pieceTimerSet = false;
+  protected int i = 0;
+  protected int playSpot = 0;
+
+  public final static int TOP = 1;
+  public final static int BOTTOM = -1;
+  public Timer pieceMover;
+  protected Player currentPlayer;
+
   // constructors
   public Board()
   {
@@ -39,6 +52,10 @@ public abstract class Board extends JPanel
       hollows[i].setBorderPainted(false);
     }
     // negative peices handled in Hollow constructor
+
+    retry = false;
+    pieceMover = new Timer(650, null);
+    pieceMover.setRepeats(true);
   }
 
   public int buttonClicked(){
@@ -93,11 +110,24 @@ public abstract class Board extends JPanel
     }
     hollows[0].add(x);
   }
-  public abstract boolean movePieces(Player p, int spot);
+  public void movePieces(Player p, int spot){
+    pieceCount = getHollow(spot).take();
+    retry = false;
+    i = 0;
+    playSpot = spot;
+    currentPlayer = p;
+
+    if( !pieceTimerSet) {
+      pieceTimerSet = true;
+      setUpMover();
+    }
+    pieceMover.start();
+  }
+
+  public abstract void setUpMover();
 
   public boolean emptySide(){ // this will indicate if a playing side of the board is empty
     boolean empty = true;
-
     for(int i = 1; i < hollowsLength(); i++){
       if (i == sideLength + 1){
         if ( empty )
@@ -122,9 +152,18 @@ public abstract class Board extends JPanel
 
     return count;
   }
+  public boolean getRetry(){
+    return retry;
+  }
   public Hollow getHollow(int i)
   {
     return hollows[i % hollows.length];
+  }
+  public boolean isHollow(Hollow x){
+    for (Hollow h : hollows ){
+      if( h == x) return true;
+    }
+    return false;
   }
   public Hollow getHome(Player p){
     if (p.getHome() == -1 )
@@ -142,6 +181,7 @@ public abstract class Board extends JPanel
     return hollows[(sideLength + 1 - distance)];
   }
 
+
   public boolean playerSide(Player p, int i){
     i = i % hollows.length;
     if ( i > sideLength + 1)
@@ -156,6 +196,7 @@ public abstract class Board extends JPanel
 
     return hollows[0].getCount() - hollows[sideLength+1].getCount();
   }
+
 
   // begin graphics
 

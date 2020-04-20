@@ -3,11 +3,16 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Game extends JPanel{
+public class Game extends JPanel implements ActionListener {
     private Board gameBoard;
     private JTextPane statusbar;
     private Player [] list = new Player[2];
+    private int turn = 0;
+    private boolean completed = false;
+    private Timer playTimer;
 
     public final static int CAPTURE_MODE = 0;
     public final static int AVALANCHE_MODE = 1;
@@ -25,19 +30,23 @@ public class Game extends JPanel{
     public Game(int game_mode, int player_1, int player_2, int length, int pieces){
         gameBoard = new CaptureBoard(length, pieces);
 
-        if(player_1 == EASY_COMPUTER)
-            list[0] = new EasyComputer();
-        else
-            list[0] = new HumanPlayer();
+        for(int i = 0; i < gameBoard.hollowsLength(); i++)
+            gameBoard.getHollow(i).addActionListener(this);
 
-        list[0].setHome(-1);
+        gameBoard.pieceMover.addActionListener(this);
+
+        if(player_1 == EASY_COMPUTER)
+            list[0] = new EasyComputer(Board.BOTTOM);
+        else
+            list[0] = new HumanPlayer(Board.BOTTOM);
 
         if(player_2 == EASY_COMPUTER)
-            list[1] = new EasyComputer();
+            list[1] = new EasyComputer(Board.TOP);
         else
-            list[1] = new HumanPlayer();
+            list[1] = new HumanPlayer(Board.TOP);
 
-        list[1].setHome(1);
+
+        gameBoard.setClickable(list[turn]);
 
 
         setLayout(new BorderLayout());
@@ -49,70 +58,83 @@ public class Game extends JPanel{
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
         statusbar.setFont(new Font("Serif", Font.PLAIN, 20));
-        statusbar.setText("Setting up game...");
+        statusbar.setText("Player 1, choose your move.");
         statusbar.setEditable(false);
 
         add(statusbar, BorderLayout.NORTH);
         add(gameBoard, BorderLayout.CENTER);
+
+
+
     }
-    public static void main(String [] args){
-
-        JFrame frame = new JFrame("Mancala");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 900);
-        frame.setVisible(true);
-        // set up with static constants
-        Game match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
-        // add to whatever frame you need it to be
-        frame.add(match);
-        // game has started
-        match.playGame();
-    }
-    public void playGame(){
-        for ( int i = 0; !gameBoard.emptySide(); i++)
-        {
-            offerTurn(list[i%2]);
-        }
-
-        gameBoard.cleanUpBoard();
-        if( gameBoard.isWinner(list[0]) > 0)
-            statusbar.setText("Game over! Player 1 is the winner");
-        else if (gameBoard.isWinner(list[1]) > 0)
-            statusbar.setText("Game over! Player 2 is the winner");
-        else
-            statusbar.setText("Game over! Tie Game.");
-    }
-    public void offerTurn(Player p){
-        if(p.getHome() == -1 )
-            statusbar.setText("Left player, choose your move.");
-        else
-            statusbar.setText("Right player, choose your move.");
 
 
-        Hollow h = new Hollow();
-        boolean retry;
-        int spot;
-        do {
-            spot = p.takeTurn(gameBoard);
-            gameBoard.repaint();
-            try {
-                Thread.sleep(400);
-            }catch(InterruptedException e){
-                e.printStackTrace();
-            }
-            gameBoard.repaint();
-            gameBoard.getHollow(spot).unClick();        // deselects hollow
-            statusbar.setText("Moving pieces...");
-            retry = gameBoard.movePieces(p, spot);
 
-            if (retry)
-            {
-                if(p.getHome() == -1 )
-                    statusbar.setText("Left player, take another turn!");
+
+
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == gameBoard.pieceMover){
+            if(gameBoard.moved){
+                System.out.println("Gameboard is moved!");
+                gameBoard.moved = false;
+                System.out.println("Retry == " + gameBoard.retry);
+
+                if (!gameBoard.retry) {
+                    nextPlayer();
+
+                    statusbar.setText(list[turn].getName() + ", choose your move...");
+
+                }
                 else
-                    statusbar.setText("Right player, take another turn!");
+                {
+                    statusbar.setText(list[turn].getName() + ", choose another move!");
+                }
+                if(list[turn].isBot()){
+
+                    playTimer = new Timer(300, this);
+                    playTimer.setRepeats(false);
+                    playTimer.start();
+                }
+                else
+                    gameBoard.setClickable(list[turn]);
+
+
+                if (gameBoard.emptySide()) {
+                    System.out.println("Game is finished");
+                    statusbar.setText("Game Over!");
+                    completed = true;
+                    gameBoard.cleanUpBoard();
+                }
             }
-        }while ( retry && !gameBoard.emptySide());
+        }
+        else {
+            gameBoard.disableAll();
+            System.out.println("Player " + turn + " action performed:");
+            if(e.getSource() == playTimer){
+                list[turn].takeTurn(gameBoard);
+            }
+            else {
+                Hollow h = (Hollow) e.getSource();
+                h.click();
+            }
+            int spot = gameBoard.buttonClicked();
+            repaint();
+            Timer clickDelay = new Timer(300, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    gameBoard.getHollow(spot).unClick();
+                    repaint();
+                }
+            });
+            clickDelay.start();
+            gameBoard.movePieces(list[turn], spot);
+
+
+        }
+    }
+
+    public void nextPlayer(){
+        turn = (turn + 1)% list.length;
     }
 
 }
