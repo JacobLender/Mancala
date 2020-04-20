@@ -1,14 +1,18 @@
 import java.util.Random;
 
-public abstract class Player {
-    protected int pieces;
+public abstract class Player{
     protected int home;
+    protected String name;
+    protected boolean bot;
     public Player(){
         this(0);
     }
     public Player(int h){
-        pieces = 0;
         home = h;
+        if(home == -1)
+            name = "Player 1";
+        else
+            name = "Player 2";
     }
 
     public void setHome(int h){
@@ -16,10 +20,14 @@ public abstract class Player {
     }
 
     //accessors
-    public int getPieces()
-    { return pieces; }
     public int getHome()
     { return home; }
+    public String getName(){
+        return name;
+    }
+    public boolean isBot(){
+        return bot;
+    }
     public int oppHome(){
         return home * -1;
     }
@@ -37,7 +45,7 @@ public abstract class Player {
         return -1;
     }
 
-    public abstract int takeTurn(Board b);
+    public abstract void takeTurn(Board b);
 }
 
 class HumanPlayer extends Player{
@@ -46,15 +54,10 @@ class HumanPlayer extends Player{
     }
     public HumanPlayer(int h){
         super(h);
+        bot = false;
     }
-    public int takeTurn(Board b){
-        int spot = -1;
-        b.setClickable(this);  // set clickable hollows based on who is playing
-        do {
-            spot = b.buttonClicked();
-        }while(spot == -1);        // waits for player to click on hollow
-        b.disableAll();                     // all hollows now unclickable
-        return spot;
+    public void takeTurn(Board b) {
+
     }
 }
 
@@ -64,8 +67,9 @@ class EasyComputer extends Player{
     }
     public EasyComputer(int h){
         super(h);
+        bot = true;
     }
-    public int takeTurn(Board b){
+    public void takeTurn(Board b){
         int spot;
 
         if(canPlayHome(b) != -1)
@@ -74,21 +78,21 @@ class EasyComputer extends Player{
             Random rand = new Random();
             do {
                 spot = rand.nextInt(b.getSideLength()) + 1;
-                if (home == -1)
+                if (home == Board.BOTTOM)
                     spot += b.getSideLength() + 1;
             } while (b.getHollow(spot).getCount() == 0);
         }
+        System.out.println("I picked " + spot + "!");
         b.getHollow(spot).click();
         b.disableAll();
-        return spot;
+
     }
 }
 class MediumComputer extends Player{
     public MediumComputer(int h){
         super(h);
     }
-    public int takeTurn(Board b){
+    public void takeTurn(Board b){
 
-        return 0;
     }
 }

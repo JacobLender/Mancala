@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.String;
 
 public class menu{
     private JFrame frame;
@@ -12,7 +11,7 @@ public class menu{
     private static int gamesWon;
     private static double winPercentage;
     private int colorChooser;
-    private Color colorNames[] = { Color.BLACK, Color.BLUE, Color.CYAN,
+    private Color[] colorNames = { Color.BLACK, Color.BLUE, Color.CYAN,
             Color.GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE,
             Color.PINK, Color.RED, Color.YELLOW };
     ButtonGroup gamemodeGroup;
@@ -197,20 +196,19 @@ public class menu{
         back.addActionListener(buttonHandle);
 
     }
-    public void startGame(){                    //This code is in Game.java as the main
-        frame = new JFrame("Mancala");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 900);
-        frame.setVisible(true);
+           public void startGame(){                    //This code is in Game.java as the main
+            frame = new JFrame("Mancala");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(600, 900);
+            frame.setVisible(true);
 
-        // set up with static constants
-        Game match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
+            // set up with static constants
+            Game match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
 
-        // add to whatever frame you need it to be
-        frame.add(match);
+            // add to whatever frame you need it to be
+            frame.add(match);
 
-        // game has started
-        match.playGame();
+            // game has started
 
     }
 
@@ -303,7 +301,6 @@ public class menu{
                 }
 
             }else if(str.equals("Begin!")){
-                System.out.println("START HERE");
                 frame.setVisible(false);
                 createAndShowGUI("GAME");
 

@@ -1,12 +1,11 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 // these are the spots on the board
-class Hollow extends JButton implements ActionListener
+class Hollow extends JButton
 {
     private int count;  // the number of peices in each hollow
     private int side;
+
 
     boolean isClicked;  // indicate user input to board / game
 
@@ -23,7 +22,6 @@ class Hollow extends JButton implements ActionListener
 
         side = theside;
         isClicked = false;
-        addActionListener(this);
     }
 
     // accessors
@@ -57,10 +55,5 @@ class Hollow extends JButton implements ActionListener
         int x = count;
         count = 0;
         return x;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        isClicked = true;
     }
 }
