@@ -1,9 +1,12 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.String;
 
-public class menu{
+public class menu implements ChangeListener{
     private JFrame frame;
     private String gameMode;
     private String playerOption;
@@ -11,12 +14,15 @@ public class menu{
     private static int gamesWon;
     private static double winPercentage;
     private int colorChooser;
-    private Color[] colorNames = { Color.BLACK, Color.BLUE, Color.CYAN,
+    private Color colorNames[] = { Color.BLACK, Color.BLUE, Color.CYAN,
             Color.GRAY, Color.GREEN, Color.MAGENTA, Color.ORANGE,
             Color.PINK, Color.RED, Color.YELLOW };
     ButtonGroup gamemodeGroup;
     ButtonGroup playerGroup;
     private String currentFrame;
+    int numofHollow;
+    int numofMarbles;
+
 
     public menu() {
         createAndShowGUI("Menu");
@@ -24,8 +30,7 @@ public class menu{
 
     public static void main(String[] args) {
         menu men = new menu();
-//        Game cap = new CaptureMode();
-//        cap.playGame();
+
     }
 
     private void addAButton(JButton buttName, Container container) {
@@ -110,7 +115,28 @@ public class menu{
         avalanche.addActionListener(gameMode);
         gamemodeGroup.add(avalanche);
 
+        JLabel sliderLabelHollow = new JLabel("# of Hollows per Player", JLabel.CENTER);
+        JLabel sliderLabelMarbles = new JLabel("Starting amount of marbles in Hollow",JLabel.CENTER);
+        sliderLabelHollow.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sliderLabelMarbles.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JSlider slideHollow = new JSlider(2,9,6);
+        slideHollow.setName("HollowSlider");
+        JSlider slideMarbles = new JSlider(1,14,7);
+        slideMarbles.setName("MarbleSlider");
+        slideHollow.addChangeListener(this);
+        slideHollow.setPaintTicks(true);
+        slideHollow.setMajorTickSpacing(1);
+        slideHollow.setPaintLabels(true);
+        slideMarbles.addChangeListener(this);
+        slideMarbles.setPaintTicks(true);
+        slideMarbles.setMajorTickSpacing(1);
+        slideMarbles.setPaintLabels(true);
 
+
+        pane.add(sliderLabelHollow);
+        pane.add(slideHollow);
+        pane.add(sliderLabelMarbles);
+        pane.add(slideMarbles);
 
         ButtonHandler buttonHandle = new ButtonHandler();
         JButton startGame = new JButton("Start Game");
@@ -196,19 +222,20 @@ public class menu{
         back.addActionListener(buttonHandle);
 
     }
-           public void startGame(){                    //This code is in Game.java as the main
-            frame = new JFrame("Mancala");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(600, 900);
-            frame.setVisible(true);
+    public void startGame(){                    //This code is in Game.java as the main
+        frame = new JFrame("Mancala");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 900);
+        frame.setVisible(true);
 
-            // set up with static constants
-            Game match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
+        // set up with static constants
+        Game match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
 
-            // add to whatever frame you need it to be
-            frame.add(match);
+        // add to whatever frame you need it to be
+        frame.add(match);
 
-            // game has started
+        // game has started
+        match.playGame();
 
     }
 
@@ -264,16 +291,16 @@ public class menu{
     private class ButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent event) {
 
-            String str = event.getActionCommand();
-            if (str.equals("Play Game")) {
+            String buttonName = event.getActionCommand();
+            if (buttonName.equals("Play Game")) {
                 currentFrame = "Setup";
                 frame.setVisible(false);
                 createAndShowGUI("Setup");
-            } else if (str.equals("Statistics")) {
+            } else if (buttonName.equals("Statistics")) {
                 currentFrame = "Statistics";
                 frame.setVisible(false);
                 createAndShowGUI("Statistics");
-            } else if (str.equals("DO NOT PRESS!")) {
+            } else if (buttonName.equals("DO NOT PRESS!")) {
                 frame.setVisible(false);
                 if (colorChooser == 9)
                     colorChooser = 0;
@@ -281,7 +308,7 @@ public class menu{
                     colorChooser++;
 
                 createAndShowGUI("Menu");
-            }else if(str.equals("Start Game")){
+            }else if(buttonName.equals("Start Game")){
                 frame.setVisible(false);
 
                 if(gameMode.equals("Capture")) {
@@ -291,7 +318,7 @@ public class menu{
                     currentFrame = "avalancheRules";
                     createAndShowGUI("avalancheRules");
                 }
-            }else if(str.equals("Back")){
+            }else if(buttonName.equals("Back")){
                 frame.setVisible(false);
                 if(currentFrame.equals("Statistics") || currentFrame.equals("Setup")){
                     createAndShowGUI("Menu");
@@ -300,7 +327,8 @@ public class menu{
                     currentFrame = "Setup";
                 }
 
-            }else if(str.equals("Begin!")){
+            }else if(buttonName.equals("Begin!")){
+
                 frame.setVisible(false);
                 createAndShowGUI("GAME");
 
@@ -308,4 +336,18 @@ public class menu{
         } // end method itemStateChanged
 
     } // end private inner class CheckBoxHandler
+
+
+        public void stateChanged(ChangeEvent event){
+            Object S = event.getSource();
+            JSlider tempSlide = (JSlider)S;
+            String sliderName = tempSlide.getName();
+
+            if(sliderName.equals("HollowSlider"))
+                numofHollow = (int) tempSlide.getValue();
+            else if(sliderName.equals("MarbleSlider"))
+                numofMarbles = (int) tempSlide.getValue();
+
+        }
+
 }
