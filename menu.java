@@ -4,9 +4,12 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
-public class menu implements ChangeListener{
+public class menu implements ChangeListener, java.io.Serializable{
     private JFrame frame;
+    private Game match;
+    static private menu men;
     private String gameMode;
     private String playerOption;
     private static int playCount;
@@ -24,11 +27,12 @@ public class menu implements ChangeListener{
 
 
     public menu() {
+        deserialize();
         createAndShowGUI("Menu");
     }
 
     public static void main(String[] args) {
-        menu men = new menu();
+        men = new menu();
 
     }
 
@@ -228,12 +232,41 @@ public class menu implements ChangeListener{
         frame.setVisible(true);
 
         // set up with static constants
-        Game match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
+        match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
 
         // add to whatever frame you need it to be
         frame.add(match);
+        do{
+            if(match.checkCompletedGame())
+                endofGame();
+        }while(!match.checkCompletedGame());
 
-        // game has started
+
+    }
+    private void endofGame() {
+        serialize();
+        Object[] options = {"Play Again",
+                "Main Menu",
+                "Quit"};
+        int n = JOptionPane.showOptionDialog(frame,
+                "What would you like to do next?",
+                "End of Game",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[2]);
+        if (n == 0) {
+            startGame();
+
+        } else if (n == 1) {
+            frame.setVisible(false);
+            createAndShowGUI("Menu");
+        } else {
+            System.exit(0);
+        }
+
+
     }
 
     private void createAndShowGUI(String frameName) {
@@ -335,16 +368,53 @@ public class menu implements ChangeListener{
     } // end private inner class CheckBoxHandler
 
 
-        public void stateChanged(ChangeEvent event){
-            Object S = event.getSource();
-            JSlider tempSlide = (JSlider)S;
-            String sliderName = tempSlide.getName();
+    public void stateChanged(ChangeEvent event){
+        Object S = event.getSource();
+        JSlider tempSlide = (JSlider)S;
+        String sliderName = tempSlide.getName();
 
-            if(sliderName.equals("HollowSlider"))
-                numofHollow = tempSlide.getValue();
-            else if(sliderName.equals("MarbleSlider"))
-                numofMarbles = tempSlide.getValue();
+        if(sliderName.equals("HollowSlider"))
+            numofHollow = tempSlide.getValue();
+        else if(sliderName.equals("MarbleSlider"))
+            numofMarbles = tempSlide.getValue();
+
+    }
+
+    private void serialize(){
+        File file = new File("saveGame.ser");
+        String filename = file.getAbsolutePath();
+
+        try{
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+
+            out.writeObject(men);
+
+            out.close();
+            fileOut.close();
+        }catch(IOException ex){
 
         }
+    }
+
+    private void deserialize(){
+        File file = new File("saveGame.ser");
+        String filename = file.getAbsolutePath();
+        try{
+            FileInputStream fileIn = new FileInputStream(filename);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+
+            men = (menu)in.readObject();
+
+            in.close();
+            fileIn.close();
+        }catch(IOException ex){
+
+        }catch(ClassNotFoundException ex){
+
+        }
+    }
+
+
 
 }
