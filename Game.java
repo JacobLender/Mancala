@@ -28,7 +28,11 @@ public class Game extends JPanel implements ActionListener {
         this(game_mode, player_1, player_2, 6, 4);
     }
     public Game(int game_mode, int player_1, int player_2, int length, int pieces){
-        gameBoard = new CaptureBoard(length, pieces);
+
+        if (game_mode == Game.AVALANCHE_MODE)
+            gameBoard = new AvalancheBoard(length, pieces);
+        else
+            gameBoard = new CaptureBoard(length, pieces);
 
         for(int i = 0; i < gameBoard.hollowsLength(); i++)
             gameBoard.getHollow(i).addActionListener(this);

@@ -224,7 +224,7 @@ public class menu implements ChangeListener{
     public void startGame(){                    //This code is in Game.java as the main
         frame = new JFrame("Mancala");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 900);
+        frame.setSize(600, 600);
         frame.setVisible(true);
 
         // set up with static constants

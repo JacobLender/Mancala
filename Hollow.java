@@ -1,11 +1,12 @@
 import javax.swing.*;
+import java.util.Random;
+import java.util.Vector;
 
 // these are the spots on the board
 class Hollow extends JButton
 {
-    private int count;  // the number of peices in each hollow
     private int side;
-
+    public Vector<Piece> pieces;
 
     boolean isClicked;  // indicate user input to board / game
 
@@ -13,22 +14,23 @@ class Hollow extends JButton
     {
         this(0, 0);
     }
-    public Hollow(int pieces, int theside)
+    public Hollow(int numPieces, int theside)
     {
-        if ( pieces < 0 )
-            count = 0;
-        else
-            count = pieces;
-
         side = theside;
         isClicked = false;
+
+        pieces = new Vector<Piece>();
+        Random rand = new Random();
+        for(int i = 0; i < numPieces;  i++){
+            pieces.add(new Piece(rand.nextInt(10) + 1, rand.nextInt(10) + 1));
+        }
     }
 
     // accessors
     public int getCount()   // mumber of peices
-    { return count; }
+    { return pieces.size(); }
     public boolean empty()
-    { return count == 0; }
+    { return pieces.size() == 0; }
     public int getSide(){
         return side;
     }
@@ -41,19 +43,17 @@ class Hollow extends JButton
     }
 
     // mutators
-    public void increment()
-    {
-        add(1);
+    public void addPiece(Piece p){
+        pieces.add(p);
     }
-    public void add(int i)
-    {
-        count += i;
+    public void dumpPieces(Vector<Piece> v){
+        pieces.addAll(v);
+        v.clear();
     }
-    public int take()
+    public void take(Vector<Piece> v)
     // simulates a player taking peices from a hollow
     {
-        int x = count;
-        count = 0;
-        return x;
+        v.addAll(pieces);
+        pieces.clear();
     }
 }

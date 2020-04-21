@@ -17,21 +17,20 @@ public class CaptureBoard extends Board{
         pieceMover.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                currentHollow = getHollow(playSpot + 1 + i);        // next spot on board
+                currentHollow = getHollow(playSpot + 1 + counter);        // next spot on board
                 if (currentHollow.getSide() != currentPlayer.oppHome()) {      // increment if not opponent home
-                    currentHollow.increment();
+                    currentHollow.addPiece(movingPieces.firstElement());
+                    movingPieces.remove(0);
                     System.out.println("Increment done");
                     repaint();
                 } else {
-                    pieceCount++;                                           // if opponent home, we need to go additional spot
-                    System.out.print("Pieces is incremented");
+                    pieceCount++;                             // if opponent home, we need to go additional spot
                 }
-                if (i < pieceCount - 1)       // counter boundary
-                    i++;
+                if (counter < pieceCount - 1)       // counter boundary
+                    counter++;
                 else {
                     pieceMover.stop();
                     moved = true;
-                    System.out.println("Moved set to true...");
 
                     if (currentPlayer.getHome() == currentHollow.getSide()) {
                         System.out.println("User scored!");
@@ -40,9 +39,9 @@ public class CaptureBoard extends Board{
                             && oppositeHollow((playSpot + pieceCount)).getCount() != 0) {
 
                         Hollow home = getHome(currentPlayer);
-                        int y = currentHollow.take();
-                        int z = oppositeHollow(playSpot + pieceCount).take();
-                        home.add(y + z);
+                        currentHollow.take(movingPieces);
+                        oppositeHollow(playSpot + pieceCount).take(movingPieces);
+                        home.dumpPieces(movingPieces);
                         repaint();
                         retry = true;
                     }

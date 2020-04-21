@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
+import java.util.Vector;
 
 public abstract class Board extends JPanel
 {
@@ -7,11 +9,14 @@ public abstract class Board extends JPanel
   protected int sideLength;
 
   protected Hollow currentHollow;
+  protected Vector<Piece> movingPieces;
+  protected int spotPlayed;
   protected int pieceCount;
+  protected int counter;
+
   public boolean retry;
   protected boolean moved = false;
   protected boolean pieceTimerSet = false;
-  protected int i = 0;
   protected int playSpot = 0;
 
   public final static int TOP = 1;
@@ -19,6 +24,21 @@ public abstract class Board extends JPanel
   public Timer pieceMover;
   protected Player currentPlayer;
 
+
+
+  // GUI Information
+  private int circleLength;
+  private int circleHeight;
+  private int boardLength;
+  private int boardHeight;
+  private int topBasketX;
+  private int topBasketY;
+  private int bottomBasketX;
+  private int bottomBasketY;
+  private int basketHeight;
+  private int basketWidth;
+  private int boardY;
+  private int boardX;
   // constructors
   public Board()
   {
@@ -30,6 +50,12 @@ public abstract class Board extends JPanel
   }
   public Board(int s, int pieces)
   {
+    boardLength = getWidth()/2;
+    boardHeight = getHeight()*3/4;
+    circleLength = boardLength / 4;
+    circleHeight = boardHeight / 9;
+
+
     if (s < 2)
       sideLength = 2;
     else
@@ -50,12 +76,16 @@ public abstract class Board extends JPanel
       hollows[i].setOpaque(false);
       hollows[i].setContentAreaFilled(false);
       hollows[i].setBorderPainted(false);
+
     }
+    System.out.println("Board completed...");
     // negative peices handled in Hollow constructor
 
     retry = false;
     pieceMover = new Timer(650, null);
     pieceMover.setRepeats(true);
+
+    movingPieces = new Vector<Piece>();
   }
 
   public int buttonClicked(){
@@ -99,21 +129,23 @@ public abstract class Board extends JPanel
     }
   }
   public void cleanUpBoard(){
-    int x = 0;
+    Vector<Piece> cleanUp = new Vector<Piece>();
     for( int i = 1; i < hollows.length; i++) {
       if( i == sideLength+1){
-        hollows[sideLength+1].add(x);
-        x = 0;
+        hollows[sideLength+1].dumpPieces(cleanUp);
+        cleanUp.clear();
       }
       else
-        x += hollows[i].take();
+        hollows[i].take(cleanUp);
     }
-    hollows[0].add(x);
+    hollows[0].dumpPieces(cleanUp);
   }
   public void movePieces(Player p, int spot){
-    pieceCount = getHollow(spot).take();
+    getHollow(spot).take(movingPieces);
+    spotPlayed = spot;
+    pieceCount = movingPieces.size();
     retry = false;
-    i = 0;
+    counter = 0;
     playSpot = spot;
     currentPlayer = p;
 
@@ -125,6 +157,22 @@ public abstract class Board extends JPanel
   }
 
   public abstract void setUpMover();
+  public void setUpPieces(){
+    Random rand = new Random();
+    if ( circleLength/2 > 0 && circleHeight/2>0) {
+      for (Hollow h : hollows) {
+        for (Piece p : h.pieces) {
+          p.setCord(circleLength / p.xScale /2 + circleLength/4, circleHeight / p.yScale / 3 + circleHeight/4);
+        }
+      }
+    }
+    for(Piece p : hollows[sideLength+1].pieces){
+      p.setCord(basketWidth / p.xScale * 3  / 4  + basketWidth/8, basketHeight / p.yScale * 3 / 4 + basketHeight / 8);
+    }
+    for(Piece p : hollows[0].pieces){
+      p.setCord(basketWidth / p.xScale * 3  / 4  + basketWidth/8, basketHeight / p.yScale * 3 / 4 + basketHeight / 8);
+    }
+  }
 
   public boolean emptySide(){ // this will indicate if a playing side of the board is empty
     boolean empty = true;
@@ -203,79 +251,125 @@ public abstract class Board extends JPanel
   public void paintComponent(Graphics g){
     super.paintComponent(g);
     setBackground(Color.WHITE);
+    setUpPieces();
 
-    int boardLength = getWidth()/2;
-    int boardHeight = getHeight()*3/4;
-    int boardX = getWidth()/4;
-    int boardY = getHeight()/10;
+
+//    //new board start here
+//    boardLength = getWidth()/2;
+//    boardX = getWidth()/2 - boardLength/2;
+//
+//    basketWidth = boardLength - getWidth()/20;
+//    basketHeight = getHeight() / 20;
+//
+//    g.drawRoundRect();
+
+
+    circleLength = boardLength / 4;
+    circleHeight = boardHeight / 9;
+
+    boardLength = getWidth()/2;
+    boardHeight = getHeight()*3/4;
+
+    boardX = getWidth()/4;
+    boardY = getHeight()/10;
+
+    topBasketX = getWidth()/4 + boardLength/20;
+    topBasketY = getHeight()/10 + boardHeight/45;
+    bottomBasketX = getWidth()/4 + boardLength/20;
+    bottomBasketY = getHeight()*15/20 - boardHeight/45;
+    basketHeight = boardHeight/8;
+    basketWidth = boardLength - getWidth()/20;
 
     g.drawString(numPieces()+"", 50, 50);
 
-    g.setColor(new Color(205, 170, 125));
-    g.fillRoundRect(boardX, boardY, boardLength, boardHeight, getWidth()/10, getHeight()/10);
+    drawBoard(g);
 
     g.setColor(new Color(152, 117, 84));
-    int topBasketX = getWidth()/4 + boardLength/20;
-    int topBasketY = getHeight()/10 + boardHeight/45;
-    int bottomBasketX = getWidth()/4 + boardLength/20;
-    int bottomBasketY = getHeight()*15/20 - boardHeight/45;
-
     g.fillRoundRect(topBasketX, topBasketY, boardLength - getWidth()/20, boardHeight/8, getWidth()/20, getHeight()/20);
+    for( int j = 0; j < hollows[sideLength+1].pieces.size(); j++){
+      Piece p = hollows[sideLength+1].pieces.elementAt(j);
+      g.setColor(p.getColor());
+      g.fillOval(topBasketX + p.getX(), topBasketY + p.getY(), circleLength/3, circleHeight/2);
+    }
+    g.setColor(new Color(152, 117, 84));
     g.fillRoundRect(bottomBasketX, bottomBasketY, boardLength - getWidth()/20, boardHeight/8, getWidth()/20, getHeight()/20);
+    for( int j = 0; j < hollows[0].pieces.size(); j++){
+      Piece p = hollows[0].pieces.elementAt(j);
+      g.setColor(p.getColor());
+      g.fillOval(bottomBasketX + p.getX(), bottomBasketY + p.getY(), circleLength/3, circleHeight/2);
+    }
 
     g.setColor(Color.BLACK);
     g.drawString(hollows[sideLength + 1].getCount()+"", getWidth()/2, topBasketY + topBasketY/2);
     g.drawString(hollows[0].getCount()+"", getWidth()/2, bottomBasketY + boardHeight/16);
 
-    int circleLength = boardLength / 4;
-    int circleHeight = boardHeight / 9;
-
+    int incrementX = topBasketX + topBasketX/4;
     int incrementY = topBasketY + boardHeight/8;
     for(int i = sideLength + 2; i < hollows.length; i++) {
       //draw highlight if possible
       if(hollows[i].isEnabled() && hollows[i].getCount() != 0) {
         g.setColor(new Color(194, 192, 15));
-        g.fillOval(topBasketX + topBasketX/4 - circleLength /30, incrementY - circleHeight/30,
+        g.fillOval(incrementX - circleLength /30, incrementY - circleHeight/30,
                 circleLength + circleLength /15, circleHeight + circleHeight /15);
       }
       if(hollows[i].isClicked()){
         g.setColor(new Color(54, 194, 70));
-        g.fillOval(topBasketX + topBasketX/4 - circleLength /30, incrementY - circleHeight/30,
+        g.fillOval(incrementX - circleLength /30, incrementY - circleHeight/30,
                 circleLength + circleLength /15, circleHeight + circleHeight /15);
       }
 
       //draw hollow
       g.setColor(new Color(152, 117, 84));
-      g.fillOval(topBasketX + topBasketX /4, incrementY, circleLength, circleHeight);
-      g.setColor(new Color(0, 0, 0));
-      g.drawString(  hollows[i].getCount()+ "",topBasketX + topBasketX /4 + circleLength/2, incrementY + circleHeight/2);
-      hollows[i].setBounds(topBasketX + topBasketX/4, incrementY, circleLength, circleHeight);
+      g.fillOval(incrementX, incrementY, circleLength, circleHeight);
+
+      for( int j = 0; j < hollows[i].pieces.size(); j++){
+        Piece p = hollows[i].pieces.elementAt(j);
+        g.setColor(p.getColor());
+        g.fillOval(incrementX + p.getX(), incrementY + p.getY(), circleLength/3, circleHeight/2);
+      }
+
+      g.setColor(Color.BLACK);
+      g.drawString(  hollows[i].getCount()+ "",incrementX + circleLength/2, incrementY + circleHeight/2);
+      hollows[i].setBounds(incrementX, incrementY, circleLength, circleHeight);
       add(hollows[i]);
 
       incrementY += circleHeight;
     }
 
+    incrementX = bottomBasketX + topBasketX;
     incrementY = topBasketY + boardHeight/8;
     for(int i = sideLength; i > 0; i--){
       // draw highlight is possible
       if(hollows[i].isEnabled() && hollows[i].getCount() != 0) {
         g.setColor(new Color(194, 192, 15));
-        g.fillOval(bottomBasketX + topBasketX - circleLength /30, incrementY - circleHeight/30,
+        g.fillOval(incrementX - circleLength /30, incrementY - circleHeight/30,
                 circleLength + circleLength /15, circleHeight + circleHeight /15);
       }
       if(hollows[i].isClicked()){
         g.setColor(new Color(54, 194, 70));
-        g.fillOval(bottomBasketX + topBasketX - circleLength /30, incrementY - circleHeight/30,
+        g.fillOval(incrementX - circleLength /30, incrementY - circleHeight/30,
                 circleLength + circleLength /15, circleHeight + circleHeight /15);
       }
       // draw hollow
       g.setColor(new Color(152, 117, 84));
-      g.fillOval(bottomBasketX + topBasketX, incrementY, circleLength, circleHeight);
+      g.fillOval(incrementX, incrementY, circleLength, circleHeight);
+
+      for( int j = 0; j < hollows[i].pieces.size(); j++){
+        Piece p = hollows[i].pieces.elementAt(j);
+        g.setColor(p.getColor());
+        g.fillOval(incrementX + p.getX(), incrementY + p.getY(), circleLength/3, circleHeight/2);
+      }
+
       g.setColor(new Color(0, 0, 0));
-      g.drawString( hollows[i].getCount()+"", bottomBasketX + topBasketX + circleLength/2, incrementY + circleHeight/2);
-      hollows[i].setBounds(bottomBasketX + topBasketX, incrementY, circleLength, circleHeight);
+      g.drawString( hollows[i].getCount()+"", incrementX + circleLength/2, incrementY + circleHeight/2);
+      hollows[i].setBounds(incrementX, incrementY, circleLength, circleHeight);
       add(hollows[i]);
       incrementY = incrementY + circleHeight;
     }
+  }
+
+  private void drawBoard(Graphics g){
+    g.setColor(new Color(205, 170, 125));
+    g.fillRoundRect(boardX, boardY, boardLength, boardHeight, getWidth()/10, getHeight()/10);
   }
 }
