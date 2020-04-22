@@ -27,6 +27,8 @@ public abstract class Board extends JPanel
 
 
   // GUI Information
+  private int width;
+  private int height;
   private int circleLength;
   private int circleHeight;
   private int boardLength;
@@ -50,10 +52,10 @@ public abstract class Board extends JPanel
   }
   public Board(int s, int pieces)
   {
-    boardLength = getWidth()/2;
-    boardHeight = getHeight()*3/4;
-    circleLength = boardLength / 4;
-    circleHeight = boardHeight / 9;
+//    boardLength = getWidth()/2;
+//    boardHeight = getHeight()*3/4;
+//    circleLength = boardLength / 4;
+//    circleHeight = boardHeight / 9;
 
 
     if (s < 2)
@@ -263,36 +265,40 @@ public abstract class Board extends JPanel
 //
 //    g.drawRoundRect();
 
+    width = getWidth();
+    height = getHeight();
+
+    boardX = width / 4;
+    boardY = height / 10;
+    boardLength = width / 2;
+
+    topBasketX = boardX + boardLength / 20;
+    topBasketY = boardY;
+
+    bottomBasketX = boardX + boardLength / 20;
+    bottomBasketY = boardY + (circleHeight * (sideLength + 1));
+
+    basketHeight = height / 9;
+    basketWidth = boardLength - width/20;
 
     circleLength = boardLength / 4;
-    circleHeight = boardHeight / 9;
+    circleHeight = height / 9;
 
-    boardLength = getWidth()/2;
-    boardHeight = getHeight()*3/4;
-
-    boardX = getWidth()/4;
-    boardY = getHeight()/10;
-
-    topBasketX = getWidth()/4 + boardLength/20;
-    topBasketY = getHeight()/10 + boardHeight/45;
-    bottomBasketX = getWidth()/4 + boardLength/20;
-    bottomBasketY = getHeight()*15/20 - boardHeight/45;
-    basketHeight = boardHeight/8;
-    basketWidth = boardLength - getWidth()/20;
+    boardHeight = basketHeight * 2 + sideLength * circleHeight;
 
     g.drawString(numPieces()+"", 50, 50);
 
     drawBoard(g);
 
     g.setColor(new Color(152, 117, 84));
-    g.fillRoundRect(topBasketX, topBasketY, boardLength - getWidth()/20, boardHeight/8, getWidth()/20, getHeight()/20);
+    g.fillRoundRect(topBasketX, topBasketY, basketWidth, basketHeight, getWidth()/20, getHeight()/20);
     for( int j = 0; j < hollows[sideLength+1].pieces.size(); j++){
       Piece p = hollows[sideLength+1].pieces.elementAt(j);
       g.setColor(p.getColor());
       g.fillOval(topBasketX + p.getX(), topBasketY + p.getY(), circleLength/3, circleHeight/2);
     }
     g.setColor(new Color(152, 117, 84));
-    g.fillRoundRect(bottomBasketX, bottomBasketY, boardLength - getWidth()/20, boardHeight/8, getWidth()/20, getHeight()/20);
+    g.fillRoundRect(bottomBasketX, bottomBasketY, basketWidth, basketHeight, getWidth()/20, getHeight()/20);
     for( int j = 0; j < hollows[0].pieces.size(); j++){
       Piece p = hollows[0].pieces.elementAt(j);
       g.setColor(p.getColor());
@@ -304,8 +310,8 @@ public abstract class Board extends JPanel
     g.drawString(hollows[0].getCount()+"", getWidth()/2, bottomBasketY + boardHeight/16);
 
     int incrementX = topBasketX + topBasketX/4;
-    int incrementY = topBasketY + boardHeight/8;
-    for(int i = sideLength + 2; i < hollows.length; i++) {
+    int incrementY = topBasketY + basketHeight;
+    for(int i = sideLength; i > 0; i--) { //int i = sideLength + 2; i < 3; i++
       //draw highlight if possible
       if(hollows[i].isEnabled() && hollows[i].getCount() != 0) {
         g.setColor(new Color(194, 192, 15));
@@ -337,7 +343,7 @@ public abstract class Board extends JPanel
     }
 
     incrementX = bottomBasketX + topBasketX;
-    incrementY = topBasketY + boardHeight/8;
+    incrementY = topBasketY + basketHeight;
     for(int i = sideLength; i > 0; i--){
       // draw highlight is possible
       if(hollows[i].isEnabled() && hollows[i].getCount() != 0) {
