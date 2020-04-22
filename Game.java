@@ -103,7 +103,9 @@ public class Game extends JPanel implements ActionListener {
                     matchFinished.start();
                     statusbar.setText(gameBoard.decideWinner());
                     if(gameBoard.decideWinner().equals("Player One Wins!"))
-                        source.incrementWinCount();
+                        source.incrementWin();
+
+                    source.updateStats();
                 }
                 else if(list[turn].isBot()){
                     signalPlayer();
@@ -154,12 +156,12 @@ public class Game extends JPanel implements ActionListener {
         playTimer.start();
     }
 
-    public int increment(){
-        String str = gameBoard.decideWinner();
-        if(str.equals("Player One Wins!"))
-            return 1;
-        else
-            return 0;
-    }
+//    public int increment(){
+//        String str = gameBoard.decideWinner();
+//        if(str.equals("Player One Wins!"))
+//            return 1;
+//        else
+//            return 0;
+//    }
 
 }

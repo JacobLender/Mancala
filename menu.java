@@ -28,7 +28,6 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
 
     public menu() {
-        ReadStats();
         createAndShowGUI("Menu");
     }
 
@@ -163,16 +162,20 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
     public void Statistics(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
-        winPercentage = gamesWon / playCount;
+
         addlabel("Statistics", pane, 80, Color.RED);
         addlabelforStats("Games Played: ", playCount, pane, 40, Color.RED);
         addlabelforStats("Games Won: ", gamesWon, pane, 40, Color.ORANGE);
-        addlabelforStats("Winning Percentage: ", winPercentage, pane, 40, Color.RED);
+        addlabelforStats("Win Percentage: ", winPercentage, pane, 40, Color.RED);
 
         ButtonHandler buttonHandle = new ButtonHandler();
         JButton back = new JButton("Back");
         addAButton(back, pane);
         back.addActionListener(buttonHandle);
+
+        JButton reset = new JButton("Reset Stats");
+        addAButton(reset, pane);
+        reset.addActionListener(buttonHandle);
 
     }
 
@@ -240,7 +243,6 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
         frame.setVisible(true);
-        playCount++;
         // set up with static constants
         if( gameMode.equals("Capture")) {
             if(playerOption.equals("PVP"))
@@ -294,6 +296,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
             frame.setVisible(false);
             startGame();
         } else if (n == 1) {
+            SaveStats();
             frame.setVisible(false);
             createAndShowGUI("Menu");
         } else {
@@ -396,7 +399,14 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
                     currentFrame = "Setup";
                 }
 
-            }else if(buttonName.equals("Begin!")){
+            }else if(buttonName.equals("Reset Stats")){
+                playCount = 0;
+                gamesWon = 0;
+                winPercentage = 0;
+                frame.setVisible(false);
+                createAndShowGUI("Statistics");
+            }
+            else if(buttonName.equals("Begin!")){
 
                 frame.setVisible(false);
                 createAndShowGUI("GAME");
@@ -423,8 +433,12 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         try {
             File file = new File("save.txt");
             FileWriter writer = new FileWriter(file);
-            writer.write(playCount);
-            writer.write(gamesWon);
+            String Percentage = String.format("%.2f",winPercentage);
+            writer.write(playCount + "");
+            writer.write(" ");
+            writer.write(gamesWon + "");
+            writer.write(" ");
+            writer.write(Percentage);
             writer.close();
         }catch(IOException e){
             System.out.println("file not found");
@@ -439,6 +453,8 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
                 playCount = scan.nextInt();
             if(scan.hasNextInt())
                 gamesWon = scan.nextInt();
+            if(scan.hasNextDouble())
+                winPercentage = scan.nextDouble();
 
         }catch(FileNotFoundException e){
             System.out.println("file not found");
@@ -446,7 +462,13 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
     }
 
 
-    public void incrementWinCount(){
+    public void updateStats(){
+        playCount++;
+        winPercentage = ((double)gamesWon / playCount) * 100;
+
+    }
+
+    public void incrementWin(){
         gamesWon++;
     }
 
