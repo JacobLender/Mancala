@@ -96,10 +96,15 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         PVP.addActionListener(Players);
         playerGroup.add(PVP);
 
-        JRadioButton PVC = new JRadioButton("Player vs Computer");
-        addRadioButton(PVC, pane);
-        PVC.addActionListener(Players);
-        playerGroup.add(PVC);
+        JRadioButton PVCE = new JRadioButton("Player vs Computer (EASY)");
+        addRadioButton(PVCE, pane);
+        PVCE.addActionListener(Players);
+        playerGroup.add(PVCE);
+
+        JRadioButton PVCH = new JRadioButton("Player vs Computer (HARD)");
+        addRadioButton(PVCH, pane);
+        PVCH.addActionListener(Players);
+        playerGroup.add(PVCH);
 
         JRadioButton CVC = new JRadioButton("Computer vs Computer");
         addRadioButton(CVC, pane);
@@ -240,16 +245,20 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         if( gameMode.equals("Capture")) {
             if(playerOption.equals("PVP"))
                 match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.HUMAN_PLAYER, numofHollow, numofMarbles);
-            else if(playerOption.equals("PVC"))
+            else if(playerOption.equals("PVCE"))
                 match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
+            else if(playerOption.equals("PVCH"))
+                match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.HARD_COMPUTER, numofHollow, numofMarbles);
             else
                 match = new Game(Game.CAPTURE_MODE, Game.EASY_COMPUTER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
         }
         else{
             if(playerOption.equals("PVP"))
                 match = new Game(Game.AVALANCHE_MODE, Game.HUMAN_PLAYER, Game.HUMAN_PLAYER, numofHollow, numofMarbles);
-            else if(playerOption.equals("PVC"))
+            else if(playerOption.equals("PVCE"))
                 match = new Game(Game.AVALANCHE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
+            else if(playerOption.equals("PVCH"))
+                match = new Game(Game.AVALANCHE_MODE, Game.HUMAN_PLAYER, Game.HARD_COMPUTER, numofHollow, numofMarbles);
             else
                 match = new Game(Game.AVALANCHE_MODE, Game.EASY_COMPUTER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
         }
@@ -324,10 +333,14 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
             if (str.equals("Player vs Player")) {
                 playerOption = "PVP";
 
-            } else if (str.equals("Player vs Computer")) {
-                playerOption = "PVC";
+            } else if (str.equals("Player vs Computer (EASY")) {
+                playerOption = "PVCE";
 
-            } else if (str.equals("Computer vs Computer")) {
+            } else if (str.equals("Computer vs Computer (HARD)")) {
+                playerOption = "PVCH";
+
+            }
+            else if (str.equals("Computer vs Computer")) {
                 playerOption = "CVC";
 
             }

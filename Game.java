@@ -22,7 +22,7 @@ public class Game extends JPanel implements ActionListener {
 
     public final static int HUMAN_PLAYER = 0;
     public final static int EASY_COMPUTER = 1;
-    public final static int MEDIUM_COMPUTER = 2;
+    public final static int HARD_COMPUTER = 2;
 
     public Game(){
         this(CAPTURE_MODE, HUMAN_PLAYER, HUMAN_PLAYER);
