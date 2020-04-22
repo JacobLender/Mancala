@@ -306,7 +306,7 @@ public abstract class Board extends JPanel
     }
 
     g.setColor(Color.BLACK);
-    g.drawString(hollows[sideLength + 1].getCount()+"", getWidth()/2, topBasketY - 10);
+    g.drawString(hollows[sideLength + 1].getCount()+"", getWidth()/2, topBasketY - 8);
     g.drawString(hollows[0].getCount()+"", getWidth()/2, bottomBasketY +  basketHeight + 15);
 
     int incrementX = topBasketX + topBasketX/4;
@@ -377,5 +377,19 @@ public abstract class Board extends JPanel
   private void drawBoard(Graphics g){
     g.setColor(new Color(205, 170, 125));
     g.fillRoundRect(boardX, boardY, boardLength, boardHeight, getWidth()/10, getHeight()/10);
+  }
+
+  public String decideWinner(){
+    int playerUno = hollows[0].getCount();
+    int playerDos = hollows[sideLength + 1].getCount();
+
+    if(playerUno > playerDos)
+      return "Player One Wins!";
+    else if(playerUno == playerDos)
+      return "Tie Game";
+    else
+      return "Player Two Wins!";
+
+
   }
 }

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.Scanner;
 
 public class menu implements ActionListener,  ChangeListener, java.io.Serializable{
     private JFrame frame;
@@ -27,13 +28,13 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
 
     public menu() {
-        deserialize();
+        ReadStats();
         createAndShowGUI("Menu");
     }
 
     public static void main(String[] args) {
         men = new menu();
-
+        ReadStats();
     }
 
     private void addAButton(JButton buttName, Container container) {
@@ -157,6 +158,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
     public void Statistics(Container pane) {
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
+        winPercentage = gamesWon / playCount;
         addlabel("Statistics", pane, 80, Color.RED);
         addlabelforStats("Games Played: ", playCount, pane, 40, Color.RED);
         addlabelforStats("Games Won: ", gamesWon, pane, 40, Color.ORANGE);
@@ -233,7 +235,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
         frame.setVisible(true);
-
+        playCount++;
         // set up with static constants
         if( gameMode.equals("Capture")) {
             if(playerOption.equals("PVP"))
@@ -268,7 +270,6 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
     }
 
     private void endofGame() {
-        serialize();
         Object[] options = {"Play Again",
                 "Main Menu",
                 "Quit"};
@@ -287,6 +288,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
             frame.setVisible(false);
             createAndShowGUI("Menu");
         } else {
+            SaveStats();
             System.exit(0);
         }
 
@@ -404,39 +406,35 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
     }
 
-    private void serialize(){
-        File file = new File("saveGame.ser");
-        String filename = file.getAbsolutePath();
-
-        try{
-            FileOutputStream fileOut = new FileOutputStream(filename);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-
-            out.writeObject(men);
-
-            out.close();
-            fileOut.close();
-        }catch(IOException ex){
-
+    public void SaveStats(){
+        try {
+            File file = new File("save.txt");
+            FileWriter writer = new FileWriter(file);
+            writer.write(playCount);
+            writer.write(gamesWon);
+            writer.close();
+        }catch(IOException e){
+            System.out.println("file not found");
         }
     }
 
-    private void deserialize(){
-        File file = new File("saveGame.ser");
-        String filename = file.getAbsolutePath();
+   static public void ReadStats(){
         try{
-            FileInputStream fileIn = new FileInputStream(filename);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
+            File f = new File("save.txt");
+            Scanner scan = new Scanner(f);
+            if(scan.hasNextInt())
+                playCount = scan.nextInt();
+            if(scan.hasNextInt())
+                gamesWon = scan.nextInt();
 
-            men = (menu)in.readObject();
-
-            in.close();
-            fileIn.close();
-        }catch(IOException ex){
-
-        }catch(ClassNotFoundException ex){
-
+        }catch(FileNotFoundException e){
+            System.out.println("file not found");
         }
+    }
+
+
+    public void incrementWinCount(){
+        gamesWon++;
     }
 
 

@@ -5,6 +5,7 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class Game extends JPanel implements ActionListener {
     private menu source;
@@ -52,7 +53,9 @@ public class Game extends JPanel implements ActionListener {
         else
             list[1] = new HumanPlayer(Board.TOP);
 
-        turn = 0;
+        Random rand = new Random();
+
+        turn = rand.nextInt(2);
         if (list[turn].isBot())
             signalPlayer();
         else
@@ -94,11 +97,13 @@ public class Game extends JPanel implements ActionListener {
                 if (gameBoard.emptySide()) {
                     completed = true;
                     System.out.println("Game is finished");
-                    statusbar.setText("Game Over!");
                     gameBoard.cleanUpBoard();
                     matchFinished = new Timer(0, source);
                     matchFinished.setRepeats(false);
                     matchFinished.start();
+                    statusbar.setText(gameBoard.decideWinner());
+                    if(gameBoard.decideWinner().equals("Player One Wins!"))
+                        source.incrementWinCount();
                 }
                 else if(list[turn].isBot()){
                     signalPlayer();
@@ -148,4 +153,13 @@ public class Game extends JPanel implements ActionListener {
         playTimer.setRepeats(false);
         playTimer.start();
     }
+
+    public int increment(){
+        String str = gameBoard.decideWinner();
+        if(str.equals("Player One Wins!"))
+            return 1;
+        else
+            return 0;
+    }
+
 }
