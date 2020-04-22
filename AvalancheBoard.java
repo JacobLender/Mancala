@@ -29,12 +29,10 @@ public class AvalancheBoard extends Board{
                 if (currentHollow.getSide() != currentPlayer.oppHome()) {      // increment if not opponent home
                     currentHollow.addPiece(movingPieces.firstElement());
                     movingPieces.remove(0);
-                    System.out.println("Increment done");
                     repaint();
                 }
                 else {
                     pieceCount++;                               // if opponent home, we need to go additional spot
-                    System.out.print("Pieces is incremented");
                 }
 
                 if (counter < pieceCount - 1)       // counter boundary
@@ -47,7 +45,6 @@ public class AvalancheBoard extends Board{
                     else{
                         moved = true;
                         if (currentPlayer.getHome() == currentHollow.getSide()) {
-                            System.out.println("User scored!");
                             retry = true;
                         }
                         pieceMover.stop();

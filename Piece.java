@@ -6,8 +6,9 @@ public class Piece {
     public int xScale, yScale;
     private Color color;
 
-    public static final Color [] colorList = { new Color(81, 165, 255, 214) , // light blue
-            new Color(195, 43, 55, 200),    // light red
+    public static final Color [] colorList = {
+            new Color(81, 165, 255, 214) ,          // light blue
+            new Color(195, 43, 55, 200),            // light red
             new Color(254, 255, 38, 178),
             new Color(255, 126, 45),
             new Color(102, 195, 80, 225),

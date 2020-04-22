@@ -21,7 +21,6 @@ public class CaptureBoard extends Board{
                 if (currentHollow.getSide() != currentPlayer.oppHome()) {      // increment if not opponent home
                     currentHollow.addPiece(movingPieces.firstElement());
                     movingPieces.remove(0);
-                    System.out.println("Increment done");
                     repaint();
                 } else {
                     pieceCount++;                             // if opponent home, we need to go additional spot
@@ -33,7 +32,6 @@ public class CaptureBoard extends Board{
                     moved = true;
 
                     if (currentPlayer.getHome() == currentHollow.getSide()) {
-                        System.out.println("User scored!");
                         retry = true;
                     } else if (currentHollow.getCount() == 1 && currentHollow.getSide() == 0 && playerSide(currentPlayer, playSpot + pieceCount)
                             && oppositeHollow((playSpot + pieceCount)).getCount() != 0) {

@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 
-public class menu implements ChangeListener, java.io.Serializable{
+public class menu implements ActionListener,  ChangeListener, java.io.Serializable{
     private JFrame frame;
     private Game match;
     static private menu men;
@@ -89,7 +89,8 @@ public class menu implements ChangeListener, java.io.Serializable{
         playerGroup = new ButtonGroup();
 
         addlabel("Choose Players", pane, 50, Color.BLACK);
-        JRadioButton PVP = new JRadioButton("Player vs Player");
+        JRadioButton PVP = new JRadioButton("Player vs Player", true );
+        playerOption = "PVP";
         addRadioButton(PVP, pane);
         PVP.addActionListener(Players);
         playerGroup.add(PVP);
@@ -103,12 +104,12 @@ public class menu implements ChangeListener, java.io.Serializable{
         addRadioButton(CVC, pane);
         CVC.addActionListener(Players);
         playerGroup.add(CVC);
-
+        gameMode = "Capture";
         CheckBoxHandler gameMode = new CheckBoxHandler();
         addlabel("Game Mode", pane, 50, Color.BLACK);
         gamemodeGroup = new ButtonGroup();
 
-        JRadioButton capture = new JRadioButton("Capture");
+        JRadioButton capture = new JRadioButton("Capture", true);
         addRadioButton(capture, pane);
         capture.addActionListener(gameMode);
         gamemodeGroup.add(capture);
@@ -123,8 +124,10 @@ public class menu implements ChangeListener, java.io.Serializable{
         sliderLabelHollow.setAlignmentX(Component.CENTER_ALIGNMENT);
         sliderLabelMarbles.setAlignmentX(Component.CENTER_ALIGNMENT);
         JSlider slideHollow = new JSlider(2,9,6);
+        numofHollow = 6;
         slideHollow.setName("HollowSlider");
-        JSlider slideMarbles = new JSlider(1,14,7);
+        JSlider slideMarbles = new JSlider(1,14,4);
+        numofMarbles= 4;
         slideMarbles.setName("MarbleSlider");
         slideHollow.addChangeListener(this);
         slideHollow.setPaintTicks(true);
@@ -232,16 +235,35 @@ public class menu implements ChangeListener, java.io.Serializable{
         frame.setVisible(true);
 
         // set up with static constants
-        match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER);
+        if( gameMode.equals("Capture")) {
+            if(playerOption.equals("PVP"))
+                match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.HUMAN_PLAYER, numofHollow, numofMarbles);
+            else if(playerOption.equals("PVC"))
+                match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
+            else
+                match = new Game(Game.CAPTURE_MODE, Game.EASY_COMPUTER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
+        }
+        else{
+            if(playerOption.equals("PVP"))
+                match = new Game(Game.AVALANCHE_MODE, Game.HUMAN_PLAYER, Game.HUMAN_PLAYER, numofHollow, numofMarbles);
+            else if(playerOption.equals("PVC"))
+                match = new Game(Game.AVALANCHE_MODE, Game.HUMAN_PLAYER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
+            else
+                match = new Game(Game.AVALANCHE_MODE, Game.EASY_COMPUTER, Game.EASY_COMPUTER, numofHollow, numofMarbles);
+        }
 
+
+        match.sourceMenu(this); // match lets menu know when game ends
         // add to whatever frame you need it to be
         frame.add(match);
-        do{
-            if(match.checkCompletedGame())
-                endofGame();
-        }while(!match.checkCompletedGame());
 
 
+    }
+    public void actionPerformed(ActionEvent e ){    // check if the game ends...
+        if(match.isCompleted()){
+            // do post match code here
+            endofGame();
+        }
     }
     private void endofGame() {
         serialize();
@@ -258,7 +280,6 @@ public class menu implements ChangeListener, java.io.Serializable{
                 options[2]);
         if (n == 0) {
             startGame();
-
         } else if (n == 1) {
             frame.setVisible(false);
             createAndShowGUI("Menu");
