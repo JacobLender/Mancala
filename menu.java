@@ -123,8 +123,8 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         JLabel sliderLabelMarbles = new JLabel("Starting amount of marbles in Hollow",JLabel.CENTER);
         sliderLabelHollow.setAlignmentX(Component.CENTER_ALIGNMENT);
         sliderLabelMarbles.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JSlider slideHollow = new JSlider(2,9,6);
-        numofHollow = 6;
+        JSlider slideHollow = new JSlider(2,8,8);
+        numofHollow = 8;
         slideHollow.setName("HollowSlider");
         JSlider slideMarbles = new JSlider(1,14,4);
         numofMarbles= 4;
@@ -259,12 +259,14 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
 
     }
+
     public void actionPerformed(ActionEvent e ){    // check if the game ends...
         if(match.isCompleted()){
             // do post match code here
             endofGame();
         }
     }
+
     private void endofGame() {
         serialize();
         Object[] options = {"Play Again",
@@ -279,6 +281,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
                 options,
                 options[2]);
         if (n == 0) {
+            frame.setVisible(false);
             startGame();
         } else if (n == 1) {
             frame.setVisible(false);
@@ -308,7 +311,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
             startGame();
 
         frame.pack();
-        frame.setSize(600, 600);
+        frame.setSize(600, 750);
         frame.setVisible(true);
     }
 

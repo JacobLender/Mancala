@@ -269,22 +269,22 @@ public abstract class Board extends JPanel
     height = getHeight();
 
     boardX = width / 4;
-    boardY = height / 10;
+    boardY = height / 40;
     boardLength = width / 2;
 
     topBasketX = boardX + boardLength / 20;
-    topBasketY = boardY;
+    topBasketY = boardY + 4;
 
     bottomBasketX = boardX + boardLength / 20;
-    bottomBasketY = boardY + (circleHeight * (sideLength + 1));
+    bottomBasketY = boardY + (circleHeight * (sideLength + 1)) + topBasketY;
 
     basketHeight = height / 9;
     basketWidth = boardLength - width/20;
 
     circleLength = boardLength / 4;
-    circleHeight = height / 9;
+    circleHeight = height / 11;
 
-    boardHeight = basketHeight * 2 + sideLength * circleHeight;
+    boardHeight = basketHeight * 2 + sideLength * circleHeight + 10;
 
     g.drawString(numPieces()+"", 50, 50);
 
@@ -306,12 +306,12 @@ public abstract class Board extends JPanel
     }
 
     g.setColor(Color.BLACK);
-    g.drawString(hollows[sideLength + 1].getCount()+"", getWidth()/2, topBasketY + topBasketY/2);
-    g.drawString(hollows[0].getCount()+"", getWidth()/2, bottomBasketY + boardHeight/16);
+    g.drawString(hollows[sideLength + 1].getCount()+"", getWidth()/2, topBasketY - 10);
+    g.drawString(hollows[0].getCount()+"", getWidth()/2, bottomBasketY +  basketHeight + 15);
 
     int incrementX = topBasketX + topBasketX/4;
     int incrementY = topBasketY + basketHeight;
-    for(int i = sideLength; i > 0; i--) { //int i = sideLength + 2; i < 3; i++
+    for(int i = sideLength + 2; i < hollows.length; i++) {
       //draw highlight if possible
       if(hollows[i].isEnabled() && hollows[i].getCount() != 0) {
         g.setColor(new Color(194, 192, 15));
@@ -335,7 +335,7 @@ public abstract class Board extends JPanel
       }
 
       g.setColor(Color.BLACK);
-      g.drawString(  hollows[i].getCount()+ "",incrementX + circleLength/2, incrementY + circleHeight/2);
+      g.drawString(  hollows[i].getCount()+ "",incrementX - 17, incrementY + circleHeight/2);
       hollows[i].setBounds(incrementX, incrementY, circleLength, circleHeight);
       add(hollows[i]);
 
@@ -367,7 +367,7 @@ public abstract class Board extends JPanel
       }
 
       g.setColor(new Color(0, 0, 0));
-      g.drawString( hollows[i].getCount()+"", incrementX + circleLength/2, incrementY + circleHeight/2);
+      g.drawString( hollows[i].getCount()+"", incrementX + circleLength + 12, incrementY + circleHeight/2);
       hollows[i].setBounds(incrementX, incrementY, circleLength, circleHeight);
       add(hollows[i]);
       incrementY = incrementY + circleHeight;
