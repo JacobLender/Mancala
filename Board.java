@@ -379,7 +379,7 @@ public abstract class Board extends JPanel
     g.fillRoundRect(boardX, boardY, boardLength, boardHeight, getWidth()/10, getHeight()/10);
   }
 
-  public String decideWinner(){
+  public String decideWinner(){                             //Looks at hollows and decides winner
     int playerUno = hollows[0].getCount();
     int playerDos = hollows[sideLength + 1].getCount();
 

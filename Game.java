@@ -138,7 +138,7 @@ public class Game extends JPanel implements ActionListener {
         }
     }
 
-    public void nextPlayer(){
+    public void nextPlayer(){                   //Switches between players to take turns
         turn = (turn + 1)% list.length;
     }
 

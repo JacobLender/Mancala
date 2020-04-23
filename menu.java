@@ -31,26 +31,26 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         createAndShowGUI("Menu");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {        //Call menu and read and Statistics from file
         men = new menu();
         ReadStats();
     }
 
-    private void addAButton(JButton buttName, Container container) {
+    private void addAButton(JButton buttName, Container container) {            //Add Buttons
         buttName.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttName.setFont(new Font("Verdana", Font.PLAIN, 50));
         buttName.setPreferredSize(new Dimension(400, 75));
         container.add(buttName);
     }
 
-    private static void addRadioButton(JRadioButton radio, Container container) {
+    private static void addRadioButton(JRadioButton radio, Container container) {      //Add Radio Buttons
         radio.setAlignmentX(Component.CENTER_ALIGNMENT);
         radio.setFont(new Font("Verdana", Font.PLAIN, 20));
         radio.setPreferredSize(new Dimension(50, 75));
         container.add(radio);
     }
 
-    private static void addlabel(String text, Container container, int size, Color col) {
+    private static void addlabel(String text, Container container, int size, Color col) {      //Add Labels
         JLabel label = new JLabel(text);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         label.setFont(new Font("Verdana", Font.BOLD, size));
@@ -66,29 +66,32 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         container.add(labelFStats);
     }
 
-    public void Menu(Container pane) {
+    public void Menu(Container pane) {                              //Main Menu
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         ButtonHandler buttonHandle = new ButtonHandler();
 
         addlabel("MANCALA", pane, 100, colorNames[colorChooser]);
+
         JButton playGame = new JButton("Play Game");
         addAButton(playGame, pane);
         playGame.addActionListener(buttonHandle);
+
         JButton stats = new JButton("Statistics");
         addAButton(stats, pane);
         stats.addActionListener(buttonHandle);
+
         JButton DoNotPress = new JButton("DO NOT PRESS!");
         addAButton(DoNotPress, pane);
         DoNotPress.addActionListener(buttonHandle);
 
     }
 
-    public void Setup(Container pane) {
+    public void Setup(Container pane) {                             //Setup game screen
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         CheckBoxHandler Players = new CheckBoxHandler();
         playerGroup = new ButtonGroup();
 
-        addlabel("Choose Players", pane, 50, Color.BLACK);
+        addlabel("Choose Players", pane, 50, Color.BLACK);      //Player options
         JRadioButton PVP = new JRadioButton("Player vs Player", true );
         playerOption = "PVP";
         addRadioButton(PVP, pane);
@@ -109,8 +112,9 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         addRadioButton(CVC, pane);
         CVC.addActionListener(Players);
         playerGroup.add(CVC);
-        gameMode = "Capture";
-        CheckBoxHandler gameMode = new CheckBoxHandler();
+        gameMode = "Capture";                           //Why?
+
+        CheckBoxHandler gameMode = new CheckBoxHandler();                     //Game Mode Options
         addlabel("Game Mode", pane, 50, Color.BLACK);
         gamemodeGroup = new ButtonGroup();
 
@@ -123,14 +127,17 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         addRadioButton(avalanche, pane);
         avalanche.addActionListener(gameMode);
         gamemodeGroup.add(avalanche);
-
+                                                                            //Sliders for Hollows and Marbles
         JLabel sliderLabelHollow = new JLabel("# of Hollows per Player", JLabel.CENTER);
         JLabel sliderLabelMarbles = new JLabel("Starting amount of marbles in Hollow",JLabel.CENTER);
+
         sliderLabelHollow.setAlignmentX(Component.CENTER_ALIGNMENT);
         sliderLabelMarbles.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JSlider slideHollow = new JSlider(2,8,8);
         numofHollow = 8;
         slideHollow.setName("HollowSlider");
+
         JSlider slideMarbles = new JSlider(1,14,4);
         numofMarbles= 4;
         slideMarbles.setName("MarbleSlider");
@@ -149,17 +156,17 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         pane.add(sliderLabelMarbles);
         pane.add(slideMarbles);
 
-        ButtonHandler buttonHandle = new ButtonHandler();
+        ButtonHandler buttonHandle = new ButtonHandler();           //Start Game
         JButton startGame = new JButton("Start Game");
         addAButton(startGame, pane);
         startGame.addActionListener(buttonHandle);
 
-        JButton back = new JButton("Back");
+        JButton back = new JButton("Back");                     //Back Button
         addAButton(back, pane);
         back.addActionListener(buttonHandle);
     }
 
-    public void Statistics(Container pane) {
+    public void Statistics(Container pane) {                            //Get statistics for game
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
 
@@ -179,7 +186,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
     }
 
-    public void captureRules(Container pane) {
+    public void captureRules(Container pane) {                  //Rules fro Capture mode
 
             String str = ("<html><span>1. Each Player has a store on one side of the board.<br><br>" +
                     "2.Players take turns choosing a pile from one of the holes. Moving<br>" +
@@ -210,7 +217,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
     }
 
-    public void avalancheRules(Container pane) {
+    public void avalancheRules(Container pane) {            //Rules for Avalanche mode
 
         String str = ("<html><span>Rules:<br> 1. Each Player has a store on one side of the board.<br><br>" +
                 "2. Players take turns choosing a pile from one of the holes. Moving counter-clockwise, stones from " +
@@ -238,12 +245,12 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         back.addActionListener(buttonHandle);
 
     }
-    public void startGame(){                    //This code is in Game.java as the main
+    public void startGame(){                    //Process setup choices and start the game
         frame = new JFrame("Mancala");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
         frame.setVisible(true);
-        // set up with static constants
+
         if( gameMode.equals("Capture")) {
             if(playerOption.equals("PVP"))
                 match = new Game(Game.CAPTURE_MODE, Game.HUMAN_PLAYER, Game.HUMAN_PLAYER, numofHollow, numofMarbles);
@@ -267,7 +274,6 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
 
         match.sourceMenu(this); // match lets menu know when game ends
-        // add to whatever frame you need it to be
         frame.add(match);
 
 
@@ -280,7 +286,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         }
     }
 
-    private void endofGame() {
+    private void endofGame() {          //If end of game, display these options
         Object[] options = {"Play Again",
                 "Main Menu",
                 "Quit"};
@@ -307,7 +313,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
     }
 
-    private void createAndShowGUI(String frameName) {
+    private void createAndShowGUI(String frameName) {               //Decide which GUI function to call
         frame = new JFrame(frameName);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -360,7 +366,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
     }
     // end private inner class CheckBoxHandler
 
-    private class ButtonHandler implements ActionListener {
+    private class ButtonHandler implements ActionListener {     //Responds to button-clicked events
         public void actionPerformed(ActionEvent event) {
 
             String buttonName = event.getActionCommand();
@@ -417,7 +423,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
     } // end private inner class CheckBoxHandler
 
 
-    public void stateChanged(ChangeEvent event){
+    public void stateChanged(ChangeEvent event){            //Responds to slider events
         Object S = event.getSource();
         JSlider tempSlide = (JSlider)S;
         String sliderName = tempSlide.getName();
@@ -429,7 +435,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
 
     }
 
-    public void SaveStats(){
+    public void SaveStats(){                             //Write stats to a txt file
         try {
             File file = new File("save.txt");
             FileWriter writer = new FileWriter(file);
@@ -445,7 +451,7 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
         }
     }
 
-   static public void ReadStats(){
+   static public void ReadStats(){                          //Read the stats from txt file
         try{
             File f = new File("save.txt");
             Scanner scan = new Scanner(f);
@@ -462,13 +468,13 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
     }
 
 
-    public void updateStats(){
+    public void updateStats(){                                  //Adds to play count and calculates Win %
         playCount++;
         winPercentage = ((double)gamesWon / playCount) * 100;
 
     }
 
-    public void incrementWin(){
+    public void incrementWin(){                                //Increments Games Won
         gamesWon++;
     }
 
