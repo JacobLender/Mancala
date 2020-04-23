@@ -342,10 +342,10 @@ public class menu implements ActionListener,  ChangeListener, java.io.Serializab
             if (str.equals("Player vs Player")) {
                 playerOption = "PVP";
 
-            } else if (str.equals("Player vs Computer (EASY")) {
+            } else if (str.equals("Player vs Computer (EASY)")) {
                 playerOption = "PVCE";
 
-            } else if (str.equals("Computer vs Computer (HARD)")) {
+            } else if (str.equals("Player vs Computer (HARD)")) {
                 playerOption = "PVCH";
 
             }
